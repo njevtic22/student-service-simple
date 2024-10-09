@@ -1,5 +1,6 @@
 package com.example.studentservice.util;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.PrintStream;
@@ -11,11 +12,17 @@ import java.util.Scanner;
 
 @Component
 public class ConsoleReader {
-    private final Scanner cin = new Scanner(System.in);
-    private final PrintStream cout = System.out;        // sugar code
+    private final Scanner cin;
+    private final PrintStream cout;        // sugar code
     private final DateTimeService parser;
 
-    public ConsoleReader(DateTimeService parser) {
+    public ConsoleReader(
+            @Qualifier("scanner.system.in") Scanner cin,
+            @Qualifier("system.out") PrintStream cout,
+            DateTimeService parser
+    ) {
+        this.cin = cin;
+        this.cout = cout;
         this.parser = parser;
     }
 

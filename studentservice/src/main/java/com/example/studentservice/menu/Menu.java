@@ -17,6 +17,6 @@ public class Menu {
     }
 
     public void printExitOption(int index) {
-        System.out.println(index + ": Exit");
+        System.out.println(index + ". Exit");
     }
 }
