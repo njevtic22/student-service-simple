@@ -1,6 +1,7 @@
 package com.example.studentservice.command;
 
 import com.example.studentservice.service.StudentService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,8 +14,8 @@ public class FirstCommand implements Command {
 
     @Override
     public void execute() {
-        System.out.println("Executing first command");
-        System.out.println(service.getAll());
+        PageRequest request = PageRequest.of(0, Integer.MAX_VALUE);
+        System.out.println(service.getAll(request).getContent());
     }
 
     @Override

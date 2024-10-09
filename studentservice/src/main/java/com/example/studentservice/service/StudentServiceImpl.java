@@ -1,13 +1,42 @@
 package com.example.studentservice.service;
 
+import com.example.studentservice.model.Student;
+import com.example.studentservice.repository.StudentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+    private final StudentRepository repository;
+
+    public StudentServiceImpl(StudentRepository repository) {
+        this.repository = repository;
+    }
+
+
     @Override
-    public List<String> getAll() {
-        return List.of("Elem 1", "Elem 2", "Elem 3", "Elem 4", "Elem 5", "Elem 6", "Elem 7", "Elem 8", "Elem 9", "Elem 10");
+    public Student add(Student newT) {
+        return null;
+    }
+
+    @Override
+    public Page<Student> getAll(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    @Override
+    public Student getById(Long id) {
+        return null;
+    }
+
+    @Override
+    public Student update(Long id, Student changes) {
+        return null;
+    }
+
+    @Override
+    public void delete(Long id) {
+
     }
 }

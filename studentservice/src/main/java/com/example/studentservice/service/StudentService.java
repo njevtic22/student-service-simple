@@ -1,7 +1,6 @@
 package com.example.studentservice.service;
 
-import java.util.List;
+import com.example.studentservice.model.Student;
 
-public interface StudentService {
-    List<String> getAll();
+public interface StudentService extends CrudService<Student> {
 }
