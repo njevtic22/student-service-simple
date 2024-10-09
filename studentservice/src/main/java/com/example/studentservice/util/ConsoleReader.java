@@ -31,7 +31,11 @@ public class ConsoleReader {
     }
 
     public byte nextByte(String label) {
-        return 0;
+        Byte input = null;
+        while (input == null) {
+            input = read(label, cin::nextByte, "byte");
+        }
+        return input;
     }
 
     public char nextChar() {
@@ -39,7 +43,21 @@ public class ConsoleReader {
     }
 
     public char nextChar(String label) {
-        return 0;
+        Character input = null;
+
+        TypeReader<Character> charReader = () -> {
+            String s = cin.next().strip();
+            if (s.length() == 1) {
+                return s.charAt(0);
+            } else {
+                throw new InputMismatchException("Character is expected, but string is read");
+            }
+        };
+
+        while (input == null) {
+            input = read(label, charReader, "character");
+        }
+        return input;
     }
 
     public short nextShort() {
@@ -55,29 +73,10 @@ public class ConsoleReader {
     }
 
     public int nextInt(String label) {
-        int input = 0;
-        boolean read = false;
-
-        do {
-            try {
-                cout.print(label);
-                input = cin.nextInt();
-                read = true;
-
-            } catch (InputMismatchException e) {
-                cout.println("\nYou did not enter integer or there was an overflow.\nTry again.\n");
-            } finally {
-                cin.nextLine();
-            }
-
-//           Another way
-//            try {
-//                i = Integer.parseInt(nextLine(label));
-//                read = true;
-//            } catch (NumberFormatException e) {
-//                e.printStackTrace();
-//            }
-        } while (!read);
+        Integer input = null;
+        while (input == null) {
+            input = read(label, cin::nextInt, "integer");
+        }
         return input;
     }
 
@@ -111,18 +110,17 @@ public class ConsoleReader {
 
     public String nextLine(String label) {
         String input = "";
-        boolean read = false;
+        boolean notRead = true;
 
         do {
             cout.print(label);
             input = cin.nextLine();
+            notRead = input.isBlank();
 
-            if (input.isBlank()) {
+            if (notRead) {
                 cout.println("\nYou did not enter anything.\nTry again.\n");
-            } else {
-                read = true;
             }
-        } while (!read);
+        } while (notRead);
 
         return input;
     }
@@ -183,5 +181,20 @@ public class ConsoleReader {
 
     public void close() {
         cin.close();
+    }
+
+    private <T> T read(String label, TypeReader<T> reader, String type) {
+        T input = null;
+
+        try {
+            cout.print(label);
+            input = reader.nextType();
+        } catch (InputMismatchException e) {
+            cout.println("\nYou did not enter " + type + " or there was an overflow.\nTry again.\n");
+        } finally {
+            cin.nextLine();
+        }
+
+        return input;
     }
 }
