@@ -25,8 +25,7 @@ public class MainRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         while (true) {
             menu.printCommands(commands);
-            String line = reader.nextLine("Enter number of desired command: ");
-            int input = Integer.parseInt(line);
+            int input = reader.nextInt("Enter number of desired command: ");
 
             if (input > 0 && input <= commands.size()) {
                 commands.get(input - 1).execute();
