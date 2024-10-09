@@ -65,7 +65,11 @@ public class ConsoleReader {
     }
 
     public short nextShort(String label) {
-        return 0;
+        Short input = null;
+        while (input == null) {
+            input = read(label, cin::nextShort, "short");
+        }
+        return input;
     }
 
     public int nextInt() {
