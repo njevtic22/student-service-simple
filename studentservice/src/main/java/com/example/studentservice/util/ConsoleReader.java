@@ -96,39 +96,33 @@ public class ConsoleReader {
     }
 
     public String nextLine(String label) {
-        String input = "";
-        boolean notRead = true;
+//        Old way
+//        String input = "";
+//        boolean read = false;
+//
+//        do {
+//            cout.print(label);
+//            input = cin.nextLine();
+//            read = !input.isBlank();
+//
+//            if (!read) {
+//                cout.println("\nYou did not enter anything.\nTry again.\n");
+//            }
+//        } while (!read);
+//
+//        return input;
 
-        do {
-            cout.print(label);
-            input = cin.nextLine();
-            notRead = input.isBlank();
-
-            if (notRead) {
-                cout.println("\nYou did not enter anything.\nTry again.\n");
+        TypeReader<String> strReader = () -> {
+            String input = cin.next().strip();
+            // if is not needed because scanner.next() skips whitespace until it reaches character
+            if (input.isBlank()) {
+                throw new InputMismatchException("String is blank");
             }
-        } while (notRead);
-
-        return input;
-
-//        Another way by using nextRead method
-//        TypeReader<String> stringReader = () -> {
-//            String input = "";
-//            boolean notRead = true;
-//
-//            do {
-//                input = cin.next().strip();
-//                notRead = input.isBlank();
-//
-//                if (notRead) {
-//                    cout.println("\nYou did not enter anything.\nTry again.\n");
-//                }
-//            } while (notRead);
-//
-//            return input;
-//        };
-//
-//        return nextRead(label, stringReader, "string");
+            return input;
+        };
+        // handler is not needed because scanner.next() skips whitespace until it reaches character
+        InputMismatchHandler handler = e -> cout.println("\nYou did not enter anything.\nTry again.\n");
+        return nextRead(label, strReader, handler);
     }
 
     public boolean nextBoolean() {
@@ -144,7 +138,16 @@ public class ConsoleReader {
     }
 
     public boolean nextDecision(String label) {
-        return false;
+        return nextDecision(label, "yes", "no");
+    }
+
+    public boolean nextDecision(String label, String yes, String no) {
+        TypeReader<Boolean> reader = () -> {
+            String decision = nextStringDecision(yes, no);
+            return decision.equalsIgnoreCase(yes);
+        };
+        InputMismatchHandler handler = e -> cout.println("\nYou did not enter \"" + yes + "\" or \"" + no + "\".\nTry again.\n");
+        return nextRead(label, reader, handler);
     }
 
     public String nextStringDecision() {
@@ -152,7 +155,21 @@ public class ConsoleReader {
     }
 
     public String nextStringDecision(String label) {
-        return "";
+        return nextStringDecision(label, "yes", "no");
+    }
+
+    public String nextStringDecision(String label, String yes, String no) {
+        TypeReader<String> reader = () -> nextStringDecision(yes, no);
+        InputMismatchHandler handler = e -> cout.println("\nYou did not enter \"" + yes + "\" or \"" + no + "\".\nTry again.\n");
+        return nextRead(label, reader, handler);
+    }
+
+    private String nextStringDecision(String yes, String no) {
+        String decision = cin.next().strip();
+        if (!decision.equalsIgnoreCase(yes) && !decision.equalsIgnoreCase(no)) {
+            throw new InputMismatchException("String is not \"" + yes + "\" nor \"" + no + "\"");
+        }
+        return decision;
     }
 
     public LocalDate nextDate() {
@@ -190,21 +207,27 @@ public class ConsoleReader {
     }
 
     private <T> T nextRead(String label, TypeReader<T> reader, String type) {
+        InputMismatchHandler handler = e ->
+                cout.println("\nYou did not enter " + type + " or there was an overflow.\nTry again.\n");
+        return nextRead(label, reader, handler);
+    }
+
+    private <T> T nextRead(String label, TypeReader<T> reader, InputMismatchHandler handler) {
         T input = null;
         while (input == null) {
-            input = readOnce(label, reader, type);
+            input = readOnce(label, reader, handler);
         }
         return input;
     }
 
-    private <T> T readOnce(String label, TypeReader<T> reader, String type) {
+    private <T> T readOnce(String label, TypeReader<T> reader, InputMismatchHandler handler) {
         T input = null;
 
         try {
             cout.print(label);
             input = reader.nextType();
         } catch (InputMismatchException e) {
-            cout.println("\nYou did not enter " + type + " or there was an overflow.\nTry again.\n");
+            handler.handle(e);
         } finally {
             cin.nextLine();
         }
