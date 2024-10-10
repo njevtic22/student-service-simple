@@ -31,6 +31,7 @@ public class MainRunner implements ApplicationRunner {
                 commands.get(input - 1).execute();
             } else if (input == 0) {
                 System.out.println("Shutdown");
+                reader.close();
                 return;
             } else {
                 System.out.println("Invalid option");

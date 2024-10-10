@@ -31,11 +31,7 @@ public class ConsoleReader {
     }
 
     public byte nextByte(String label) {
-        Byte input = null;
-        while (input == null) {
-            input = read(label, cin::nextByte, "byte");
-        }
-        return input;
+        return nextRead(label, cin::nextByte, "byte");
     }
 
     public char nextChar() {
@@ -43,8 +39,6 @@ public class ConsoleReader {
     }
 
     public char nextChar(String label) {
-        Character input = null;
-
         TypeReader<Character> charReader = () -> {
             String s = cin.next().strip();
             if (s.length() == 1) {
@@ -54,10 +48,7 @@ public class ConsoleReader {
             }
         };
 
-        while (input == null) {
-            input = read(label, charReader, "character");
-        }
-        return input;
+        return nextRead(label, charReader, "character");
     }
 
     public short nextShort() {
@@ -65,11 +56,7 @@ public class ConsoleReader {
     }
 
     public short nextShort(String label) {
-        Short input = null;
-        while (input == null) {
-            input = read(label, cin::nextShort, "short");
-        }
-        return input;
+        return nextRead(label, cin::nextShort, "short");
     }
 
     public int nextInt() {
@@ -77,11 +64,7 @@ public class ConsoleReader {
     }
 
     public int nextInt(String label) {
-        Integer input = null;
-        while (input == null) {
-            input = read(label, cin::nextInt, "integer");
-        }
-        return input;
+        return nextRead(label, cin::nextInt, "integer");
     }
 
     public long nextLong() {
@@ -89,7 +72,7 @@ public class ConsoleReader {
     }
 
     public long nextLong(String label) {
-        return 0;
+        return nextRead(label, cin::nextLong, "long");
     }
 
     public float nextFloat() {
@@ -97,7 +80,7 @@ public class ConsoleReader {
     }
 
     public float nextFloat(String label) {
-        return 0;
+        return nextRead(label, cin::nextFloat, "float");
     }
 
     public double nextDouble() {
@@ -105,7 +88,7 @@ public class ConsoleReader {
     }
 
     public double nextDouble(String label) {
-        return 0;
+        return nextRead(label, cin::nextDouble, "double");
     }
 
     public String nextLine() {
@@ -127,6 +110,25 @@ public class ConsoleReader {
         } while (notRead);
 
         return input;
+
+//        Another way by using nextRead method
+//        TypeReader<String> stringReader = () -> {
+//            String input = "";
+//            boolean notRead = true;
+//
+//            do {
+//                input = cin.next().strip();
+//                notRead = input.isBlank();
+//
+//                if (notRead) {
+//                    cout.println("\nYou did not enter anything.\nTry again.\n");
+//                }
+//            } while (notRead);
+//
+//            return input;
+//        };
+//
+//        return nextRead(label, stringReader, "string");
     }
 
     public boolean nextBoolean() {
@@ -134,7 +136,7 @@ public class ConsoleReader {
     }
 
     public boolean nextBoolean(String label) {
-        return false;
+        return nextRead(label, cin::nextBoolean, "boolean");
     }
 
     public boolean nextDecision() {
@@ -187,7 +189,15 @@ public class ConsoleReader {
         cin.close();
     }
 
-    private <T> T read(String label, TypeReader<T> reader, String type) {
+    private <T> T nextRead(String label, TypeReader<T> reader, String type) {
+        T input = null;
+        while (input == null) {
+            input = readOnce(label, reader, type);
+        }
+        return input;
+    }
+
+    private <T> T readOnce(String label, TypeReader<T> reader, String type) {
         T input = null;
 
         try {
