@@ -192,23 +192,70 @@ public class ConsoleReader {
     }
 
     public LocalTime nextTime() {
-        // use parser as well
-        return nextTime("", "HH:mm:ss");
+        return nextTime("");
+    }
+
+    public LocalTime nextTime(String label) {
+        return nextTime(label, DateTimeUtil.ISO_TIME);
     }
 
     public LocalTime nextTime(String label, String format) {
-        // use parser as well
-        return null;
+        TypeReader<LocalTime> timeReader = () -> {
+            String input = cin.next();
+            return dateUtil.parseTime(input, format);
+        };
+        // Check nextLine for comments
+        ExceptionHandler<DateTimeException> parseHandler = e -> cout.println("\nYou did not enter time in '" + format + "' format or time is invalid.\nTry again.\n");
+        return nextRead(label, timeReader, Throwable::printStackTrace, parseHandler);
     }
 
     public LocalDateTime nextDateTime() {
-        // use parser as well
-        return nextDateTime("", "uuuu-MM-dd'T'HH:mm:ss");
+        return nextDateTime("");
+    }
+
+    public LocalDateTime nextDateTime(String label) {
+        return nextDateTime(label, DateTimeUtil.ISO_DATE_TIME);
     }
 
     public LocalDateTime nextDateTime(String label, String format) {
-        // use parser as well
-        return null;
+        // seems simpler
+        LocalDateTime date = null;
+        while (date == null) {
+            cout.print(label);
+            String input = cin.nextLine().strip();
+            try {
+                date = dateUtil.parseDateTime(input, format);
+            } catch (DateTimeException e) {
+                cout.println("\nYou did not enter date and time in '" + format + "' format or date and time is invalid.\nTry again.\n");
+            }
+        }
+        return date;
+
+        // ignores asdf in "31.12.1980. 23:59:59 asdf"
+//        TypeReader<LocalDateTime> dateTimeReader = () -> {
+//            String[] formatSplit = format.split(" ");
+//            StringBuilder input = new StringBuilder(formatSplit.length * 2);
+//
+//            // All of this is to leave new line for cin.nextLine() at the end of readOnce
+//            for (String formatPart : formatSplit) {
+//                String inputPart = cin.next();
+//                if (inputPart.length() > formatPart.length() + 2) {
+//                    break;
+//                }
+//
+//                input.append(inputPart);
+//                input.append(" ");
+//            }
+//
+//            int inputLength = input.length();
+//            if (inputLength > 0) {
+//                input.setLength(inputLength - 1);
+//            }
+//            return dateUtil.parseDateTime(input.toString(), format);
+//        };
+//        // Check nextLine for comments
+//        ExceptionHandler<DateTimeException> parseHandler = e -> cout.println("\nYou did not enter date and time in '" + format + "' format or date and time is invalid.\nTry again.\n");
+//        return nextRead(label, dateTimeReader, Throwable::printStackTrace, parseHandler);
     }
 
     public void close() {
