@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.PrintStream;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -14,16 +15,16 @@ import java.util.Scanner;
 public class ConsoleReader {
     private final Scanner cin;
     private final PrintStream cout;        // sugar code
-    private final DateTimeService parser;
+    private final DateTimeUtil dateUtil;
 
     public ConsoleReader(
             @Qualifier("scanner.system.in") Scanner cin,
             @Qualifier("system.out") PrintStream cout,
-            DateTimeService parser
+            DateTimeUtil dateUtil
     ) {
         this.cin = cin;
         this.cout = cout;
-        this.parser = parser;
+        this.dateUtil = dateUtil;
     }
 
     public byte nextByte() {
@@ -121,7 +122,7 @@ public class ConsoleReader {
             return input;
         };
         // handler is not needed because scanner.next() skips whitespace until it reaches character
-        InputMismatchHandler handler = e -> cout.println("\nYou did not enter anything.\nTry again.\n");
+        ExceptionHandler<InputMismatchException> handler = e -> cout.println("\nYou did not enter anything.\nTry again.\n");
         return nextRead(label, strReader, handler);
     }
 
@@ -146,7 +147,7 @@ public class ConsoleReader {
             String decision = nextStringDecision(yes, no);
             return decision.equalsIgnoreCase(yes);
         };
-        InputMismatchHandler handler = e -> cout.println("\nYou did not enter \"" + yes + "\" or \"" + no + "\".\nTry again.\n");
+        ExceptionHandler<InputMismatchException> handler = e -> cout.println("\nYou did not enter \"" + yes + "\" or \"" + no + "\".\nTry again.\n");
         return nextRead(label, reader, handler);
     }
 
@@ -160,7 +161,7 @@ public class ConsoleReader {
 
     public String nextStringDecision(String label, String yes, String no) {
         TypeReader<String> reader = () -> nextStringDecision(yes, no);
-        InputMismatchHandler handler = e -> cout.println("\nYou did not enter \"" + yes + "\" or \"" + no + "\".\nTry again.\n");
+        ExceptionHandler<InputMismatchException> handler = e -> cout.println("\nYou did not enter \"" + yes + "\" or \"" + no + "\".\nTry again.\n");
         return nextRead(label, reader, handler);
     }
 
@@ -173,13 +174,21 @@ public class ConsoleReader {
     }
 
     public LocalDate nextDate() {
-        // use parser as well
-        return nextDate("", "uuuu-MM-dd");
+        return nextDate("");
+    }
+
+    public LocalDate nextDate(String label) {
+        return nextDate(label, DateTimeUtil.ISO_DATE);
     }
 
     public LocalDate nextDate(String label, String format) {
-        // use parser as well
-        return null;
+        TypeReader<LocalDate> dateReader = () -> {
+            String input = cin.next().strip();
+            return dateUtil.parseDate(input, format);
+        };
+        // Check nextLine for comments
+        ExceptionHandler<DateTimeException> parseHandler = e -> cout.println("\nYou did not enter date in '" + format + "' format or date is invalid.\nTry again.\n");
+        return nextRead(label, dateReader, Throwable::printStackTrace, parseHandler);
     }
 
     public LocalTime nextTime() {
@@ -207,27 +216,43 @@ public class ConsoleReader {
     }
 
     private <T> T nextRead(String label, TypeReader<T> reader, String type) {
-        InputMismatchHandler handler = e ->
+        ExceptionHandler<InputMismatchException> handler = e ->
                 cout.println("\nYou did not enter " + type + " or there was an overflow.\nTry again.\n");
         return nextRead(label, reader, handler);
     }
 
-    private <T> T nextRead(String label, TypeReader<T> reader, InputMismatchHandler handler) {
+    private <T> T nextRead(String label, TypeReader<T> reader, ExceptionHandler<InputMismatchException> handler) {
+        return nextRead(label, reader, handler, Throwable::printStackTrace);
+    }
+
+    private <T> T nextRead(
+            String label,
+            TypeReader<T> reader,
+            ExceptionHandler<InputMismatchException> mismatchHandler,
+            ExceptionHandler<DateTimeException> parseHandler
+    ) {
         T input = null;
         while (input == null) {
-            input = readOnce(label, reader, handler);
+            input = readOnce(label, reader, mismatchHandler, parseHandler);
         }
         return input;
     }
 
-    private <T> T readOnce(String label, TypeReader<T> reader, InputMismatchHandler handler) {
+    private <T> T readOnce(
+            String label,
+            TypeReader<T> reader,
+            ExceptionHandler<InputMismatchException> mismatchHandler,
+            ExceptionHandler<DateTimeException> parseHandler
+    ) {
         T input = null;
 
         try {
             cout.print(label);
             input = reader.nextType();
         } catch (InputMismatchException e) {
-            handler.handle(e);
+            mismatchHandler.handle(e);
+        } catch (DateTimeException e) {
+            parseHandler.handle(e);
         } finally {
             cin.nextLine();
         }
