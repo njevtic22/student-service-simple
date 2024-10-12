@@ -2,6 +2,7 @@ package com.example.studentservice;
 
 import com.example.studentservice.command.Command;
 import com.example.studentservice.menu.Menu;
+import com.example.studentservice.util.Colors;
 import com.example.studentservice.util.ConsoleReader;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -30,11 +31,11 @@ public class MainRunner implements ApplicationRunner {
             if (input > 0 && input <= commands.size()) {
                 commands.get(input - 1).execute();
             } else if (input == 0) {
-                System.out.println("Shutdown");
+                System.out.println(Colors.likeWarning("Shutdown"));
                 reader.close();
                 return;
             } else {
-                System.out.println("Invalid option");
+                System.out.println(Colors.likeError("Invalid option"));
             }
             System.out.println();
         }

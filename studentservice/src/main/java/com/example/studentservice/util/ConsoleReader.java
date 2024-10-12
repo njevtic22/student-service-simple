@@ -122,7 +122,8 @@ public class ConsoleReader {
             return input;
         };
         // handler is not needed because scanner.next() skips whitespace until it reaches character
-        ExceptionHandler<InputMismatchException> handler = e -> cout.println("\nYou did not enter anything.\nTry again.\n");
+        ExceptionHandler<InputMismatchException> handler = e ->
+                cout.println(Colors.likeError("\nYou did not enter anything.\nTry again.\n"));
         return nextRead(label, strReader, handler);
     }
 
@@ -147,7 +148,8 @@ public class ConsoleReader {
             String decision = nextStringDecision(yes, no);
             return decision.equalsIgnoreCase(yes);
         };
-        ExceptionHandler<InputMismatchException> handler = e -> cout.println("\nYou did not enter \"" + yes + "\" or \"" + no + "\".\nTry again.\n");
+        ExceptionHandler<InputMismatchException> handler = e ->
+                cout.println(Colors.likeError("\nYou did not enter \"" + yes + "\" or \"" + no + "\".\nTry again.\n"));
         return nextRead(label, reader, handler);
     }
 
@@ -161,7 +163,8 @@ public class ConsoleReader {
 
     public String nextStringDecision(String label, String yes, String no) {
         TypeReader<String> reader = () -> nextStringDecision(yes, no);
-        ExceptionHandler<InputMismatchException> handler = e -> cout.println("\nYou did not enter \"" + yes + "\" or \"" + no + "\".\nTry again.\n");
+        ExceptionHandler<InputMismatchException> handler = e ->
+                cout.println(Colors.likeError("\nYou did not enter \"" + yes + "\" or \"" + no + "\".\nTry again.\n"));
         return nextRead(label, reader, handler);
     }
 
@@ -187,7 +190,8 @@ public class ConsoleReader {
             return dateUtil.parseDate(input, format);
         };
         // Check nextLine for comments
-        ExceptionHandler<DateTimeException> parseHandler = e -> cout.println("\nYou did not enter date in '" + format + "' format or date is invalid.\nTry again.\n");
+        ExceptionHandler<DateTimeException> parseHandler = e ->
+                cout.println(Colors.likeError("\nYou did not enter date in '" + format + "' format or date is invalid.\nTry again.\n"));
         return nextRead(label, dateReader, Throwable::printStackTrace, parseHandler);
     }
 
@@ -205,7 +209,8 @@ public class ConsoleReader {
             return dateUtil.parseTime(input, format);
         };
         // Check nextLine for comments
-        ExceptionHandler<DateTimeException> parseHandler = e -> cout.println("\nYou did not enter time in '" + format + "' format or time is invalid.\nTry again.\n");
+        ExceptionHandler<DateTimeException> parseHandler = e ->
+                cout.println(Colors.likeError("\nYou did not enter time in '" + format + "' format or time is invalid.\nTry again.\n"));
         return nextRead(label, timeReader, Throwable::printStackTrace, parseHandler);
     }
 
@@ -226,7 +231,8 @@ public class ConsoleReader {
             try {
                 date = dateUtil.parseDateTime(input, format);
             } catch (DateTimeException e) {
-                cout.println("\nYou did not enter date and time in '" + format + "' format or date and time is invalid.\nTry again.\n");
+                cout.println(Colors.likeError(
+                        "\nYou did not enter date and time in '" + format + "' format or date and time is invalid.\nTry again.\n"));
             }
         }
         return date;
@@ -254,7 +260,9 @@ public class ConsoleReader {
 //            return dateUtil.parseDateTime(input.toString(), format);
 //        };
 //        // Check nextLine for comments
-//        ExceptionHandler<DateTimeException> parseHandler = e -> cout.println("\nYou did not enter date and time in '" + format + "' format or date and time is invalid.\nTry again.\n");
+//        ExceptionHandler<DateTimeException> parseHandler = e ->
+//                cout.println(Colors.likeError(
+//                "\nYou did not enter date and time in '" + format + "' format or date and time is invalid.\nTry again.\n"));
 //        return nextRead(label, dateTimeReader, Throwable::printStackTrace, parseHandler);
     }
 
@@ -264,7 +272,7 @@ public class ConsoleReader {
 
     private <T> T nextRead(String label, TypeReader<T> reader, String type) {
         ExceptionHandler<InputMismatchException> handler = e ->
-                cout.println("\nYou did not enter " + type + " or there was an overflow.\nTry again.\n");
+                cout.println(Colors.likeError("\nYou did not enter " + type + " or there was an overflow.\nTry again.\n"));
         return nextRead(label, reader, handler);
     }
 
