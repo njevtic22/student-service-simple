@@ -27,8 +27,8 @@ public class TablePrinter {
 
         rows.add(row);
         for (int i = 0; i < widths.length; i++) {
-            if (widths[i] - 5 < row[i].length()) {
-                widths[i] = row[i].length() + 5;
+            if (widths[i] - 4 < row[i].length()) {
+                widths[i] = row[i].length() + 4;
             }
         }
     }
