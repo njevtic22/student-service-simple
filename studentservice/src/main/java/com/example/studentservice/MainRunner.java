@@ -1,6 +1,7 @@
 package com.example.studentservice;
 
 import com.example.studentservice.command.Command;
+import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.menu.Menu;
 import com.example.studentservice.util.Colors;
 import com.example.studentservice.util.ConsoleReader;
@@ -16,7 +17,7 @@ public class MainRunner implements ApplicationRunner {
     private final ConsoleReader reader;
     private final Menu menu;
 
-    public MainRunner(List<Command> commands, ConsoleReader reader, Menu menu) {
+    public MainRunner(@CommandGroup("anonymous") List<Command> commands, ConsoleReader reader, Menu menu) {
         this.commands = commands;
         this.reader = reader;
         this.menu = menu;
@@ -25,9 +26,12 @@ public class MainRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         while (true) {
+            System.out.println("Following commands are available:");
             menu.printCommands(commands);
-            int input = reader.nextInt("Enter number of desired command: ");
+            menu.printReturnOption(0, "Exit");
 
+            int input = reader.nextInt("Enter number of desired command: ");
+            System.out.println();
             if (input > 0 && input <= commands.size()) {
                 commands.get(input - 1).execute();
             } else if (input == 0) {

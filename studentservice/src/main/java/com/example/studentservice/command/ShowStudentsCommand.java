@@ -3,7 +3,7 @@ package com.example.studentservice.command;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.service.StudentService;
 import com.example.studentservice.util.TablePrinter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
@@ -11,15 +11,20 @@ import java.io.PrintWriter;
 import java.util.List;
 
 @Component
+@Order(1)
+@CommandGroup("anonymous")
 public class ShowStudentsCommand implements Command {
-    private StudentService service;
-    private TablePrinter table;
+    private final StudentService service;
+    private final TablePrinter table;
 
-    public ShowStudentsCommand() { }
+    public ShowStudentsCommand(StudentService service, TablePrinter table) {
+        this.service = service;
+        this.table = table;
+    }
 
     @Override
     public void execute() {
-        PageRequest request = PageRequest.of(0, Integer.MAX_VALUE);
+        PageRequest request = PageRequest.of(0, 5);
         List<Student> students = service.getAll(request).getContent();
 
         table.addLine();
@@ -38,15 +43,5 @@ public class ShowStudentsCommand implements Command {
     @Override
     public String getDescription() {
         return "Show students";
-    }
-
-    @Autowired
-    public void setService(StudentService service) {
-        this.service = service;
-    }
-
-    @Autowired
-    public void setTable(TablePrinter table) {
-        this.table = table;
     }
 }

@@ -8,15 +8,13 @@ import java.util.List;
 @Component
 public class Menu {
     public void printCommands(List<Command> commands) {
-        System.out.println("Following commands are available:");
         int i = 0;
         for (Command command : commands) {
             System.out.println(++i + ". " + command.getDescription());
         }
-        printExitOption(0);
     }
 
-    public void printExitOption(int index) {
-        System.out.println(index + ". Exit");
+    public void printReturnOption(int index, String returnText) {
+        System.out.println(index + ". " + returnText);
     }
 }
