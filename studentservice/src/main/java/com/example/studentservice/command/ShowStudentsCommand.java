@@ -1,5 +1,6 @@
 package com.example.studentservice.command;
 
+import com.example.studentservice.model.Address;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.service.StudentService;
 import com.example.studentservice.util.TablePrinter;
@@ -28,11 +29,22 @@ public class ShowStudentsCommand implements Command {
         List<Student> students = service.getAll(request).getContent();
 
         table.addLine();
-        table.addRow("ID", "Name", "Surname");
+        table.addRow("Name", "Surname", "Parents name", "Index", "Birth date", "Address", "Phone", "email", "Year of studies");
         table.addLine();
 
         for (Student student : students) {
-            table.addRow(student.getId().toString(), student.getName(), student.getSurname());
+            Address address = student.getAddress();
+            table.addRow(
+                    student.getName(),
+                    student.getSurname(),
+                    student.getParentsName(),
+                    student.getIndex(),
+                    student.getBirthDate().toString(),
+                    address.getCity() + ", " + address.getStreet() + " " + address.getNumber(),
+                    student.getPhone(),
+                    student.getEmail(),
+                    student.getYearOfStudies().toString()
+            );
             table.addLine();
         }
 
