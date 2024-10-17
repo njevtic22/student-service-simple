@@ -3,6 +3,7 @@ package com.example.studentservice.command;
 import com.example.studentservice.model.Address;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.service.StudentService;
+import com.example.studentservice.util.PagingUtil;
 import com.example.studentservice.util.TablePrinter;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.PageRequest;
@@ -16,16 +17,18 @@ import java.util.List;
 @CommandGroup("anonymous")
 public class ShowStudentsCommand implements Command {
     private final StudentService service;
+    private final PagingUtil pagingUtil;
     private final TablePrinter table;
 
-    public ShowStudentsCommand(StudentService service, TablePrinter table) {
+    public ShowStudentsCommand(StudentService service, PagingUtil pagingUtil, TablePrinter table) {
         this.service = service;
+        this.pagingUtil = pagingUtil;
         this.table = table;
     }
 
     @Override
     public void execute() {
-        PageRequest request = PageRequest.of(0, Integer.MAX_VALUE);
+        PageRequest request = pagingUtil.getRequest();
         List<Student> students = service.getAll(request).getContent();
 
         table.addLine();
