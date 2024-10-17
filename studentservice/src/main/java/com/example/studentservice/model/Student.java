@@ -3,6 +3,8 @@ package com.example.studentservice.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,15 +47,16 @@ public class Student {
     private String email;
 
     @Column(nullable = false)
-    private YearOfStudies year;
+    @Enumerated(EnumType.STRING)
+    private YearOfStudies yearOfStudies;
 
     public Student() {}
 
-    public Student(String name, String surname, String parentsName, String index, LocalDate birthDate, Address address, String phone, String email, YearOfStudies year) {
-        this(null, name, surname, parentsName, index, birthDate, address, phone, email, year);
+    public Student(String name, String surname, String parentsName, String index, LocalDate birthDate, Address address, String phone, String email, YearOfStudies yearOfStudies) {
+        this(null, name, surname, parentsName, index, birthDate, address, phone, email, yearOfStudies);
     }
 
-    public Student(Long id, String name, String surname, String parentsName, String index, LocalDate birthDate, Address address, String phone, String email, YearOfStudies year) {
+    public Student(Long id, String name, String surname, String parentsName, String index, LocalDate birthDate, Address address, String phone, String email, YearOfStudies yearOfStudies) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -63,7 +66,7 @@ public class Student {
         this.address = address;
         this.phone = phone;
         this.email = email;
-        this.year = year;
+        this.yearOfStudies = yearOfStudies;
     }
 
     @Override
@@ -114,7 +117,7 @@ public class Student {
         return email;
     }
 
-    public YearOfStudies getYear() {
-        return year;
+    public YearOfStudies getYearOfStudies() {
+        return yearOfStudies;
     }
 }

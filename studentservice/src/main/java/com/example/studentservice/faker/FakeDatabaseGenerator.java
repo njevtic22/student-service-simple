@@ -1,17 +1,25 @@
 package com.example.studentservice.faker;
 
+import com.example.studentservice.model.Address;
 import com.example.studentservice.model.Student;
+import com.example.studentservice.model.YearOfStudies;
+import com.example.studentservice.util.CycleIterator;
 import com.example.studentservice.util.LongGenerator;
 import com.github.javafaker.Faker;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static com.example.studentservice.faker.FakerUtil.generateIndex;
+import static com.example.studentservice.faker.FakerUtil.generatePastLocalDate;
+import static com.example.studentservice.faker.FakerUtil.generatePhoneNumber;
+import static com.example.studentservice.faker.FakerUtil.getAddressIterator;
 import static com.example.studentservice.faker.SqlUtil.toSqlAlterSequenceRestart;
 
 public class FakeDatabaseGenerator {
@@ -23,6 +31,8 @@ public class FakeDatabaseGenerator {
     private final int STUDENTS = 50;
 
     private final PrintWriter out = new PrintWriter(new FileWriter("./src/main/resources/data-generated.sql"));
+
+    private final CycleIterator<Address> addresses = getAddressIterator();
 
     public FakeDatabaseGenerator() throws IOException {
     }
@@ -56,11 +66,19 @@ public class FakeDatabaseGenerator {
 
     private Map<Long, Student> generateStudents(LongGenerator studentId) {
         HashMap<Long, Student> students = new HashMap<>(STUDENTS);
+        LocalDate referenceDate = LocalDate.of(2000, 12, 28);
         for (int i = 0; i < STUDENTS; i++) {
             Student student = new Student(
                     studentId.next(),
                     faker.name().firstName(),
-                    FakerUtil.escapeApostrophe(faker.name().lastName())
+                    FakerUtil.escapeApostrophe(faker.name().lastName()),
+                    faker.name().firstName(),
+                    generateIndex(faker, studentId.current()),
+                    generatePastLocalDate(faker, referenceDate),
+                    addresses.next(),
+                    generatePhoneNumber(faker),
+                    "student" + studentId.current() + "@gmail.com",
+                    faker.options().option(YearOfStudies.class)
             );
             students.put(studentId.current(), student);
         }
