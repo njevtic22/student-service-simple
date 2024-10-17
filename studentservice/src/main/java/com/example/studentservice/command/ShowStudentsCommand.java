@@ -24,10 +24,13 @@ public class ShowStudentsCommand implements Command {
 
     @Override
     public void execute() {
-        PageRequest request = PageRequest.of(0, 5);
+        PageRequest request = PageRequest.of(0, Integer.MAX_VALUE);
         List<Student> students = service.getAll(request).getContent();
 
         table.addLine();
+        table.addRow("ID", "Name", "Surname");
+        table.addLine();
+
         for (Student student : students) {
             table.addRow(student.getId().toString(), student.getName(), student.getSurname());
             table.addLine();

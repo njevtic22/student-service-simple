@@ -1,6 +1,7 @@
 package com.example.studentservice.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -24,16 +26,44 @@ public class Student {
     @Column(nullable = false)
     private String surname;
 
+    @Column(nullable = false)
+    private String parentsName;
+
+    @Column(nullable = false)
+    private String index;
+
+    @Column(nullable = false)
+    private LocalDate birthDate;
+
+    @Embedded
+    private Address address;
+
+    @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private YearOfStudies year;
+
     public Student() {}
 
-    public Student(String name, String surname) {
-        this(null, name, surname);
+    public Student(String name, String surname, String parentsName, String index, LocalDate birthDate, Address address, String phone, String email, YearOfStudies year) {
+        this(null, name, surname, parentsName, index, birthDate, address, phone, email, year);
     }
 
-    public Student(Long id, String name, String surname) {
+    public Student(Long id, String name, String surname, String parentsName, String index, LocalDate birthDate, Address address, String phone, String email, YearOfStudies year) {
         this.id = id;
         this.name = name;
         this.surname = surname;
+        this.parentsName = parentsName;
+        this.index = index;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.year = year;
     }
 
     @Override
@@ -58,5 +88,33 @@ public class Student {
 
     public String getSurname() {
         return surname;
+    }
+
+    public String getParentsName() {
+        return parentsName;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public YearOfStudies getYear() {
+        return year;
     }
 }
