@@ -1,7 +1,13 @@
 package com.example.studentservice.util;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 @Component
 public class PagingUtil {
@@ -11,13 +17,18 @@ public class PagingUtil {
         this.reader = reader;
     }
 
-    public PageRequest getRequest() {
-        int pageSize = getSize();
-        int pageNumber = getNumber();
-        return PageRequest.of(pageNumber, pageSize);
+    public Pageable getRequest() {
+        return getRequest(() -> new String[]{"id,asc"});
     }
 
-    public int getNumber() {
+    public Pageable getRequest(Supplier<String[]> sortInput) {
+        int pageSize = getSize();
+        int pageNumber = getPage();
+        Sort sort = getSort(sortInput);
+        return PageRequest.of(pageNumber, pageSize, sort);
+    }
+
+    public int getPage() {
         int pageNumber = reader.nextInt("Enter desired page: ");
         while (pageNumber <= 0) {
             System.out.println(Colors.likeError("\nPage index must not be less than one.\nTry again.\n"));
@@ -33,5 +44,24 @@ public class PagingUtil {
             pageNumber = reader.nextInt("Enter desired page size: ");
         }
         return pageNumber;
+    }
+
+    public Sort getSort(Supplier<String[]> sortInput) {
+        String[] sortFields = sortInput.get();
+        List<Sort.Order> orders = new ArrayList<>(sortFields.length);
+
+        for (String field : sortFields) {
+            String[] propertyAndDirection = field.split(",");
+            String property = propertyAndDirection[0];
+            Sort.Direction direction = Sort.DEFAULT_DIRECTION;
+
+            if (propertyAndDirection.length > 1) {
+                direction = Sort.Direction.fromOptionalString(propertyAndDirection[1]).orElse(Sort.DEFAULT_DIRECTION);
+            }
+
+            orders.add(new Sort.Order(direction, property));
+        }
+
+        return Sort.by(orders);
     }
 }

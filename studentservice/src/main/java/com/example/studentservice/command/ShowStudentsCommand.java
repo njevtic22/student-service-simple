@@ -6,7 +6,7 @@ import com.example.studentservice.service.StudentService;
 import com.example.studentservice.util.PagingUtil;
 import com.example.studentservice.util.TablePrinter;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
@@ -28,11 +28,11 @@ public class ShowStudentsCommand implements Command {
 
     @Override
     public void execute() {
-        PageRequest request = pagingUtil.getRequest();
-        List<Student> students = service.getAll(request).getContent();
+        Pageable pageable = pagingUtil.getRequest(this::readSort);
+        List<Student> students = service.getAll(pageable).getContent();
 
         table.addLine();
-        table.addRow("Name", "Surname", "Parents name", "Index", "Birth date", "Address", "Phone", "email", "Year of studies");
+        table.addRow("Name", "Surname", "Parents name", "Index", "Birth date", "Address", "Phone", "Email", "Year of studies");
         table.addLine();
 
         for (Student student : students) {
@@ -61,5 +61,11 @@ public class ShowStudentsCommand implements Command {
     @Override
     public String getDescription() {
         return "Show students";
+    }
+
+    private String[] readSort() {
+        // TODO: read from console and force proper sort input
+        // how does repository behaves when sorting on same field with multiple directions?
+        return new String[]{"name,asc"};
     }
 }
