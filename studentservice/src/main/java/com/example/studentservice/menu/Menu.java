@@ -13,8 +13,4 @@ public class Menu {
             System.out.println(++i + ". " + command.getDescription());
         }
     }
-
-    public void printReturnOption(int index, String returnText) {
-        System.out.println(index + ". " + returnText);
-    }
 }

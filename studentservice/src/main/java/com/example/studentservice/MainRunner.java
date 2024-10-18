@@ -28,7 +28,7 @@ public class MainRunner implements ApplicationRunner {
         while (true) {
             System.out.println("Following commands are available:");
             menu.printCommands(commands);
-            menu.printReturnOption(0, "Exit");
+            System.out.println("0. Exit");
 
             int input = reader.nextInt("Enter number of desired command: ");
             System.out.println();
