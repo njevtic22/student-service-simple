@@ -24,10 +24,8 @@ public class FakerUtil {
 
     public static String generateIndex(Faker faker, Long studentId) {
         String course = faker.options().option(courses);
-        int number = faker.number().numberBetween(1, 241);
         int year = faker.number().numberBetween(2010, 2024);
-
-        return course + " " + number + (studentId + "/") + year;
+        return course + " " + studentId + "/" + year;
     }
 
     public static CycleIterator<Address> getAddressIterator() throws IOException {

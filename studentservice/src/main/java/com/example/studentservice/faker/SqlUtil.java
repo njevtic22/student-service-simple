@@ -15,9 +15,9 @@ public class SqlUtil {
                 student.getAddress().getStreet() + "', " +
                 student.getAddress().getNumber() + ", '" +
                 student.getPhone() + "', '" +
-                student.getEmail() + "', '" +
-                student.getYearOfStudies().toString() +
-                "');";
+                student.getEmail() + "', " +
+                student.getYearOfStudies().ordinal() +
+                ");";
     }
 
     public static String toSqlAlterSequenceRestart(String sequenceName, long restartWith) {
