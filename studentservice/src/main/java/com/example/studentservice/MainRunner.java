@@ -26,7 +26,7 @@ public class MainRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         while (true) {
-            System.out.println("\nFollowing commands are available:");
+            System.out.println("Following commands are available:");
             menu.printCommands(commands);
             System.out.println("0. Exit");
 

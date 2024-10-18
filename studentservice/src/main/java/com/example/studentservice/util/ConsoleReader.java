@@ -97,34 +97,32 @@ public class ConsoleReader {
     }
 
     public String nextLine(String label) {
-//        Old way
-//        String input = "";
-//        boolean read = false;
-//
-//        do {
-//            cout.print(label);
-//            input = cin.nextLine();
-//            read = !input.isBlank();
-//
-//            if (!read) {
-//                cout.println("\nYou did not enter anything.\nTry again.\n");
-//            }
-//        } while (!read);
-//
-//        return input;
+        String input = null;
+        while (input == null) {
+            cout.print(label);
+            String tmp = cin.nextLine().strip();
 
-        TypeReader<String> strReader = () -> {
-            String input = cin.next().strip();
-            // if is not needed because scanner.next() skips whitespace until it reaches character
-            if (input.isBlank()) {
-                throw new InputMismatchException("String is blank");
-            }
-            return input;
-        };
-        // handler is not needed because scanner.next() skips whitespace until it reaches character
-        ExceptionHandler<InputMismatchException> handler = e ->
+            if (tmp.isBlank()) {
                 cout.println(Colors.likeError("\nYou did not enter anything.\nTry again.\n"));
-        return nextRead(label, strReader, handler);
+            } else {
+                input = tmp;
+            }
+        }
+        return input;
+
+//        Doesn't work if line has spaces because scanner.next() stops at whitespace
+//        TypeReader<String> strReader = () -> {
+//            String input = cin.next().strip();
+//            // if is not needed because scanner.next() skips whitespace until it reaches character
+//            if (input.isBlank()) {
+//                throw new InputMismatchException("String is blank");
+//            }
+//            return input;
+//        };
+//        // handler is not needed because scanner.next() skips whitespace until it reaches character
+//        ExceptionHandler<InputMismatchException> handler = e ->
+//                cout.println(Colors.likeError("\nYou did not enter anything.\nTry again.\n"));
+//        return nextRead(label, strReader, handler);
     }
 
     public boolean nextBoolean() {

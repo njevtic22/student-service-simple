@@ -4,6 +4,7 @@ import com.example.studentservice.model.Address;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.service.StudentService;
 import com.example.studentservice.util.PagingUtil;
+import com.example.studentservice.util.Pair;
 import com.example.studentservice.util.TablePrinter;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,21 @@ public class ShowStudentsCommand implements Command {
 
     @Override
     public void execute() {
-        Pageable pageable = pagingUtil.getRequest(this::readSort);
+        // how does repository behaves when sorting on same field with multiple directions?
+        // It looks like it is sorting based on first input for that field and ignoring rest
+
+        List<Pair<String, String>> sortOptions = List.of(
+                new Pair<>("Name ascending", "name,asc"),
+                new Pair<>("Name descending", "name,desc"),
+                new Pair<>("Surname ascending", "surname,asc"),
+                new Pair<>("Surname descending", "surname,desc"),
+                new Pair<>("Index ascending", "index,asc"),
+                new Pair<>("Index descending", "index,desc"),
+                new Pair<>("Year of studies ascending", "yearOfStudies,asc"),
+                new Pair<>("Year of studies descending", "yearOfStudies,desc")
+        );
+
+        Pageable pageable = pagingUtil.getRequest(sortOptions);
         List<Student> students = service.getAll(pageable).getContent();
 
         table.addLine();
@@ -61,11 +76,5 @@ public class ShowStudentsCommand implements Command {
     @Override
     public String getDescription() {
         return "Show students";
-    }
-
-    private String[] readSort() {
-        // TODO: read from console and force proper sort input
-        // how does repository behaves when sorting on same field with multiple directions?
-        return new String[]{"name,asc"};
     }
 }
