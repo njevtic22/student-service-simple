@@ -29,8 +29,9 @@ public class ShowStudentsCommand implements Command {
 
     @Override
     public void execute() {
-        // how does repository behaves when sorting on same field with multiple directions?
+        // How does repository behaves when sorting on same field with multiple directions?
         // It looks like it is sorting based on first input for that field and ignoring rest
+        // getRequest secures same field does not appear multiple times
 
         List<Pair<String, String>> sortOptions = List.of(
                 new Pair<>("Name ascending", "name,asc"),

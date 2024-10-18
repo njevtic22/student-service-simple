@@ -6,7 +6,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class PagingUtil {
@@ -52,7 +54,7 @@ public class PagingUtil {
     }
 
     public Sort getSort(List<Pair<String, String>> sortOptions) {
-        String[] sortFields = getSortArray(sortOptions);
+        String[] sortFields = getSortInputs(sortOptions);
         List<Sort.Order> orders = new ArrayList<>(sortFields.length);
 
         for (String field : sortFields) {
@@ -70,21 +72,10 @@ public class PagingUtil {
         return Sort.by(orders);
     }
 
-    private String[] getSortArray(List<Pair<String, String>> sortOptions) {
-        int[] inputs = getSortInputs(sortOptions);
-        String[] sort = new String[inputs.length];
-        for (int i = 0; i < inputs.length; i++) {
-            int input = inputs[i];
-            sort[i] = sortOptions.get(input - 1).getSecond();
-        }
-
-        return sort;
-    }
-
-    private int[] getSortInputs(List<Pair<String, String>> sortOptions) {
-        // TODO: throw exception when same option is entered multiple times
+    private String[] getSortInputs(List<Pair<String, String>> sortOptions) {
+        Set<String> properties = new HashSet<>(sortOptions.size());
         int size = sortOptions.size();
-        int[] intInputs = null;
+        String[] sort = null;
         boolean read = false;
 
         while (!read) {
@@ -96,24 +87,34 @@ public class PagingUtil {
 
             String line = reader.nextLine("Enter numbers of desired sorting options separated by space: ");
             String[] split = line.split("\\s+");
-            intInputs = new int[split.length];
+            sort = new String[split.length];
 
             try {
                 for (int j = 0; j < split.length; j++) {
-                    String input = split[j];
-                    int tmp = Integer.parseInt(input);
+                    int input = Integer.parseInt(split[j]);
 
-                    if (tmp <= 0 || tmp > size) {
-                        throw new NumberFormatException("For input string: \"" + tmp + "\"");
+                    if (input <= 0 || input > size) {
+                        throw new NumberFormatException("For input string: \"" + input + "\"");
                     }
-                    intInputs[j] = tmp;
+
+                    String option = sortOptions.get(input - 1).getSecond();
+                    String property = option.split(",")[0];
+                    if (properties.contains(property)) {
+                        throw new IllegalArgumentException("You cant select sorting by same property more than once");
+                    }
+                    properties.add(property);
+                    sort[j] = option;
                 }
                 read = true;
             } catch (NumberFormatException e) {
                 System.out.println(Colors.likeError("\n" + e.getMessage().substring(18) + " is not available sorting option.\nTry again."));
+            } catch (IllegalArgumentException e) {
+                System.out.println(Colors.likeError("\n" + e.getMessage() + ".\nTry again."));
+            } finally {
+                properties.clear();
             }
         }
 
-        return intInputs;
+        return sort;
     }
 }
