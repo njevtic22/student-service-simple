@@ -47,7 +47,7 @@ public class Student {
     private String email;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private YearOfStudies yearOfStudies;
 
     public Student() {}
