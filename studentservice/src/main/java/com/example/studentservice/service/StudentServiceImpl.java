@@ -2,8 +2,8 @@ package com.example.studentservice.service;
 
 import com.example.studentservice.model.Student;
 import com.example.studentservice.repository.StudentRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +21,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Page<Student> getAll(Pageable pageable) {
+    public Slice<Student> getAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
