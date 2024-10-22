@@ -1,37 +1,36 @@
 package com.example.studentservice.service;
 
-import com.example.studentservice.model.Student;
-import com.example.studentservice.repository.StudentRepository;
+import com.example.studentservice.model.Referent;
+import com.example.studentservice.repository.ReferentRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StudentServiceImpl implements StudentService {
-    private final StudentRepository repository;
+public class ReferentServiceImpl implements ReferentService {
+    private final ReferentRepository repository;
 
-    public StudentServiceImpl(StudentRepository repository) {
+    public ReferentServiceImpl(ReferentRepository repository) {
         this.repository = repository;
     }
 
-
     @Override
-    public Student add(Student newT) {
+    public Referent add(Referent newT) {
         return null;
     }
 
     @Override
-    public Slice<Student> getAll(Pageable pageable) {
+    public Slice<Referent> getAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     @Override
-    public Student getById(Long id) {
+    public Referent getById(Long id) {
         return null;
     }
 
     @Override
-    public Student update(Long id, Student changes) {
+    public Referent update(Long id, Referent changes) {
         return null;
     }
 
