@@ -1,6 +1,7 @@
 package com.example.studentservice.faker;
 
 import com.example.studentservice.model.Address;
+import com.example.studentservice.model.Referent;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.model.YearOfStudies;
 import com.example.studentservice.util.CycleIterator;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static com.example.studentservice.faker.FakerUtil.escapeApostrophe;
 import static com.example.studentservice.faker.FakerUtil.generateIndex;
 import static com.example.studentservice.faker.FakerUtil.generatePastLocalDate;
 import static com.example.studentservice.faker.FakerUtil.generatePhoneNumber;
@@ -29,6 +31,9 @@ public class FakeDatabaseGenerator {
     private final String LINES = LINE.repeat(200);
 
     private final int STUDENTS = 50;
+    private final int REFERENTS = 20;
+
+    private final String encodedPassword = "$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6";
 
     private final PrintWriter out = new PrintWriter(new FileWriter("./src/main/resources/data-generated.sql"));
 
@@ -38,10 +43,13 @@ public class FakeDatabaseGenerator {
     }
 
     private void generateHeader(PrintWriter out) {
-
+        out.println("-- Passwords are hashed using BCrypt algorithm https://bcrypt-generator.com/");
+        out.println("-- Passwords for all users are:");
+        out.println("--");
         out.println("-- Script generates database for student-service");
         out.println("-- It generates:");
         out.println("--\t- "   + STUDENTS + " students");
+        out.println("--\t- "   + REFERENTS + " referents");
         out.println("--");
 
         out.flush();
@@ -54,12 +62,21 @@ public class FakeDatabaseGenerator {
         LongGenerator studentId = new LongGenerator();
         Map<Long, Student> students = generateStudents(studentId);
 
+        // generating referents
+        LongGenerator referentId = new LongGenerator();
+        Map<Long, Referent> referents = generateReferents(referentId);
+
         //////////
 
         // inserting students
         printToSqlInsert(students.values(), "Inserting students", out, SqlUtil::toSqlInsert);
         // altering student_id_seq
         printSequenceRestart(STUDENTS, studentId, "student_id_seq", out);
+
+        // inserting referents
+        printToSqlInsert(referents.values(), "Inserting referents", out, SqlUtil::toSqlInsert);
+        // altering referent_id_seq
+        printSequenceRestart(REFERENTS, referentId, "referent_id_seq", out);
 
         out.close();
     }
@@ -71,7 +88,7 @@ public class FakeDatabaseGenerator {
             Student student = new Student(
                     studentId.next(),
                     faker.name().firstName(),
-                    FakerUtil.escapeApostrophe(faker.name().lastName()),
+                    escapeApostrophe(faker.name().lastName()),
                     faker.name().firstName(),
                     generateIndex(faker, studentId.current()),
                     generatePastLocalDate(faker, referenceDate),
@@ -84,6 +101,23 @@ public class FakeDatabaseGenerator {
         }
 
         return students;
+    }
+
+    private Map<Long, Referent> generateReferents(LongGenerator referentId) {
+        HashMap<Long, Referent> referents = new HashMap<>(REFERENTS);
+
+        for (int i = 0; i < REFERENTS; i++) {
+            Referent referent = new Referent(
+                    referentId.next(),
+                    faker.name().firstName(),
+                    escapeApostrophe(faker.name().lastName()),
+                    "referent" + referentId.current(),
+                    encodedPassword
+            );
+            referents.put(referent.getId(), referent);
+        }
+
+        return referents;
     }
 
     private <T> void printToSqlInsert(Collection<T> values, String linesDescription, PrintWriter out, Function<T, String> fun) {
