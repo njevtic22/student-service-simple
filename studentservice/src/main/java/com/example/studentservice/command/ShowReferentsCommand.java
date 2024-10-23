@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 @Order(2)
-@CommandGroup("anonymous")
+@CommandGroup("referent-menu")
 public class ShowReferentsCommand implements Command {
     private final ReferentService service;
     private final PagingUtil pagingUtil;

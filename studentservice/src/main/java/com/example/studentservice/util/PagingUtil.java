@@ -12,10 +12,10 @@ import java.util.Set;
 
 @Component
 public class PagingUtil {
-    private final ConsoleReader reader;
+    private final ConsoleReader console;
 
-    public PagingUtil(ConsoleReader reader) {
-        this.reader = reader;
+    public PagingUtil(ConsoleReader console) {
+        this.console = console;
     }
 
     public Pageable getRequest() {
@@ -36,19 +36,19 @@ public class PagingUtil {
     }
 
     public int getPage() {
-        int pageNumber = reader.nextInt("Enter desired page: ");
+        int pageNumber = console.nextInt("Enter desired page: ");
         while (pageNumber <= 0) {
             System.out.println(Colors.likeError("\nPage index must not be less than one.\nTry again.\n"));
-            pageNumber = reader.nextInt("Enter desired page: ");
+            pageNumber = console.nextInt("Enter desired page: ");
         }
         return pageNumber - 1;
     }
 
     public int getSize() {
-        int pageNumber = reader.nextInt("Enter desired page size: ");
+        int pageNumber = console.nextInt("Enter desired page size: ");
         while (pageNumber <= 0) {
             System.out.println(Colors.likeError("\nSize must not be less than one.\nTry again.\n"));
-            pageNumber = reader.nextInt("Enter desired page size: ");
+            pageNumber = console.nextInt("Enter desired page size: ");
         }
         return pageNumber;
     }
@@ -85,7 +85,7 @@ public class PagingUtil {
                 System.out.println(++i + ". " + option.getFirst());
             }
 
-            String line = reader.nextLine("Enter numbers of desired sorting options separated by space: ");
+            String line = console.nextLine("Enter numbers of desired sorting options separated by space: ");
             String[] split = line.split("\\s+");
             sort = new String[split.length];
 

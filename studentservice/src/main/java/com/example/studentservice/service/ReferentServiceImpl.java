@@ -26,7 +26,8 @@ public class ReferentServiceImpl implements ReferentService {
 
     @Override
     public Referent getById(Long id) {
-        return null;
+        // TODO: Throw exception when user not found
+        return repository.findById(id).orElseThrow();
     }
 
     @Override

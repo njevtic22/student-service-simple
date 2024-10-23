@@ -31,7 +31,7 @@ public class Student {
     @Column(nullable = false)
     private String parentsName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String index;
 
     @Column(nullable = false)
@@ -43,7 +43,7 @@ public class Student {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
