@@ -1,10 +1,10 @@
 package com.example.studentservice.security;
 
-import com.example.studentservice.model.Referent;
+import com.example.studentservice.model.User;
 
 public interface AuthenticationService {
-    Referent authenticate(String username, String password);
+    User authenticate(String username, String password);
 
     void invalidateAuthentication();
-    Referent getAuthenticated();
+    User getAuthenticated();
 }

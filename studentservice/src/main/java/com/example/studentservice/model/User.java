@@ -11,11 +11,11 @@ import jakarta.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "referents")
-public class Referent {
+@Table(name = "users")
+public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "referent_generator")
-    @SequenceGenerator(name = "referent_generator", sequenceName = "referent_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
+    @SequenceGenerator(name = "user_generator", sequenceName = "user_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false)
@@ -30,13 +30,13 @@ public class Referent {
     @Column(nullable = false)
     private String password;
 
-    public Referent() { }
+    public User() { }
 
-    public Referent(String name, String surname, String username, String password) {
+    public User(String name, String surname, String username, String password) {
         this(null, name, surname, username, password);
     }
 
-    public Referent(Long id, String name, String surname, String username, String password) {
+    public User(Long id, String name, String surname, String username, String password) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -47,8 +47,8 @@ public class Referent {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Referent referent)) return false;
-        return Objects.equals(id, referent.id) && Objects.equals(username, referent.username);
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username);
     }
 
     @Override

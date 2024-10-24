@@ -1,7 +1,7 @@
 package com.example.studentservice.command;
 
-import com.example.studentservice.model.Referent;
-import com.example.studentservice.service.ReferentService;
+import com.example.studentservice.model.User;
+import com.example.studentservice.service.UserService;
 import com.example.studentservice.util.PagingUtil;
 import com.example.studentservice.util.Pair;
 import com.example.studentservice.util.TablePrinter;
@@ -14,13 +14,13 @@ import java.util.List;
 
 @Component
 @Order(2)
-@CommandGroup("referent-menu")
-public class ShowReferentsCommand implements Command {
-    private final ReferentService service;
+@CommandGroup("user-menu")
+public class ShowUsersCommand implements Command {
+    private final UserService service;
     private final PagingUtil pagingUtil;
     private final TablePrinter table;
 
-    public ShowReferentsCommand(ReferentService service, PagingUtil pagingUtil, TablePrinter table) {
+    public ShowUsersCommand(UserService service, PagingUtil pagingUtil, TablePrinter table) {
         this.service = service;
         this.pagingUtil = pagingUtil;
         this.table = table;
@@ -39,14 +39,14 @@ public class ShowReferentsCommand implements Command {
         );
 
         Pageable pageable = pagingUtil.getRequest(sortOptions);
-        List<Referent> referents = service.getAll(pageable).getContent();
+        List<User> users = service.getAll(pageable).getContent();
 
         table.addLine();
         table.addRow("Name", "Surname", "Username");
         table.addLine();
 
-        for (Referent referent : referents) {
-            table.addRow(referent.getName(), referent.getSurname(), referent.getUsername());
+        for (User user : users) {
+            table.addRow(user.getName(), user.getSurname(), user.getUsername());
             table.addLine();
         }
 
@@ -59,6 +59,6 @@ public class ShowReferentsCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Show referents";
+        return "Show users";
     }
 }

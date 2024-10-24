@@ -1,20 +1,20 @@
 package com.example.studentservice.security;
 
-import com.example.studentservice.model.Referent;
-import com.example.studentservice.service.ReferentService;
+import com.example.studentservice.model.User;
+import com.example.studentservice.service.UserService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SimpleAuthenticationService implements AuthenticationService {
-    private final ReferentService service;
-    private Referent authenticated;
+    private final UserService service;
+    private User authenticated;
 
-    public SimpleAuthenticationService(ReferentService service) {
+    public SimpleAuthenticationService(UserService service) {
         this.service = service;
     }
 
     @Override
-    public Referent authenticate(String username, String password) {
+    public User authenticate(String username, String password) {
         // TODO: Implement getByUsername
         authenticated = service.getById(1L);
         return authenticated;
@@ -26,7 +26,7 @@ public class SimpleAuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public Referent getAuthenticated() {
+    public User getAuthenticated() {
         return authenticated;
     }
 }

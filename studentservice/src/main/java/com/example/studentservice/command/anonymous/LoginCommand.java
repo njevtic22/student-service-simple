@@ -3,7 +3,7 @@ package com.example.studentservice.command.anonymous;
 import com.example.studentservice.command.Command;
 import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.menu.Menu;
-import com.example.studentservice.model.Referent;
+import com.example.studentservice.model.User;
 import com.example.studentservice.security.AuthenticationService;
 import com.example.studentservice.util.Colors;
 import com.example.studentservice.util.ConsoleReader;
@@ -21,7 +21,7 @@ public class LoginCommand implements Command {
     private final ConsoleReader console;
     private final Menu menu;
 
-    public LoginCommand(AuthenticationService service, @CommandGroup("referent-menu") List<Command> commands, ConsoleReader console, Menu menu) {
+    public LoginCommand(AuthenticationService service, @CommandGroup("user-menu") List<Command> commands, ConsoleReader console, Menu menu) {
         this.service = service;
         this.commands = commands;
         this.console = console;
@@ -34,7 +34,7 @@ public class LoginCommand implements Command {
 //        String password = console.nextLine("Enter password: ");
 
         // Handle exception when user not found by username
-        Referent authenticated = service.authenticate("", "");
+        User authenticated = service.authenticate("", "");
 
 
         System.out.println(authenticated.getName() + " " + authenticated.getSurname() + " successfully logged in");
