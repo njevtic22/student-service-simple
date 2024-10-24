@@ -69,26 +69,26 @@ alter sequence student_id_seq restart with 51;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------- Inserting users ------------------------------------------------------------------------------------------
-insert into users (id, name, surname, username, password) values (1, 'Dean', 'Carter', 'referent1', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (2, 'Xiomara', 'Greenholt', 'referent2', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (3, 'Vanna', 'Wiegand', 'referent3', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (4, 'Virgilio', 'Satterfield', 'referent4', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (5, 'Leonard', 'Klocko', 'referent5', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (6, 'An', 'Konopelski', 'referent6', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (7, 'Basil', 'Thompson', 'referent7', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (8, 'Elsa', 'Moen', 'referent8', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (9, 'Jamal', 'Spencer', 'referent9', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (10, 'Dorsey', 'Johnston', 'referent10', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (11, 'Sol', 'Okuneva', 'referent11', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (12, 'Carin', 'Luettgen', 'referent12', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (13, 'Ismael', 'Kerluke', 'referent13', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (14, 'Orval', 'Spencer', 'referent14', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (15, 'Alethia', 'Cummings', 'referent15', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (16, 'Mohammad', 'Casper', 'referent16', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (17, 'Rickie', 'Senger', 'referent17', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (18, 'Eleanor', 'Collier', 'referent18', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (19, 'Isaiah', 'Bartoletti', 'referent19', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
-insert into users (id, name, surname, username, password) values (20, 'Dino', 'Parisian', 'referent20', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6');
+insert into users (id, name, surname, username, password, role) values (1, 'Dean', 'Carter', 'referent1', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (2, 'Xiomara', 'Greenholt', 'referent2', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (3, 'Vanna', 'Wiegand', 'referent3', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (4, 'Virgilio', 'Satterfield', 'referent4', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (5, 'Leonard', 'Klocko', 'referent5', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (6, 'An', 'Konopelski', 'referent6', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (7, 'Basil', 'Thompson', 'referent7', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (8, 'Elsa', 'Moen', 'referent8', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (9, 'Jamal', 'Spencer', 'referent9', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (10, 'Dorsey', 'Johnston', 'referent10', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (11, 'Sol', 'Okuneva', 'referent11', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (12, 'Carin', 'Luettgen', 'referent12', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (13, 'Ismael', 'Kerluke', 'referent13', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (14, 'Orval', 'Spencer', 'referent14', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (15, 'Alethia', 'Cummings', 'referent15', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (16, 'Mohammad', 'Casper', 'referent16', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (17, 'Rickie', 'Senger', 'referent17', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (18, 'Eleanor', 'Collier', 'referent18', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (19, 'Isaiah', 'Bartoletti', 'referent19', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
+insert into users (id, name, surname, username, password, role) values (20, 'Dino', 'Parisian', 'referent20', '$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6', 'REFERENT');
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -2,6 +2,8 @@ package com.example.studentservice.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,18 +32,23 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     public User() { }
 
-    public User(String name, String surname, String username, String password) {
-        this(null, name, surname, username, password);
+    public User(String name, String surname, String username, String password, Role role) {
+        this(null, name, surname, username, password, role);
     }
 
-    public User(Long id, String name, String surname, String username, String password) {
+    public User(Long id, String name, String surname, String username, String password, Role role) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     @Override
@@ -74,5 +81,9 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }

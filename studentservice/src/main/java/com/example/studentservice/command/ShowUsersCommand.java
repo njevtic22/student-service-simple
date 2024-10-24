@@ -41,12 +41,13 @@ public class ShowUsersCommand implements Command {
         Pageable pageable = pagingUtil.getRequest(sortOptions);
         List<User> users = service.getAll(pageable).getContent();
 
+        // TODO: add row number
         table.addLine();
-        table.addRow("Name", "Surname", "Username");
+        table.addRow("Name", "Surname", "Username", "Role");
         table.addLine();
 
         for (User user : users) {
-            table.addRow(user.getName(), user.getSurname(), user.getUsername());
+            table.addRow(user.getName(), user.getSurname(), user.getUsername(), user.getRole().toString());
             table.addLine();
         }
 
