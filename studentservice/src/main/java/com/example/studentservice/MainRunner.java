@@ -14,12 +14,12 @@ import java.util.List;
 @Component
 public class MainRunner implements ApplicationRunner {
     private final List<Command> commands;
-    private final ConsoleReader reader;
+    private final ConsoleReader console;
     private final Menu menu;
 
-    public MainRunner(@CommandGroup("anonymous") List<Command> commands, ConsoleReader reader, Menu menu) {
+    public MainRunner(@CommandGroup("anonymous") List<Command> commands, ConsoleReader console, Menu menu) {
         this.commands = commands;
-        this.reader = reader;
+        this.console = console;
         this.menu = menu;
     }
 
@@ -30,13 +30,13 @@ public class MainRunner implements ApplicationRunner {
             menu.printCommands(commands);
             System.out.println("0. Exit");
 
-            int input = reader.nextInt("Enter number of desired command: ");
+            int input = console.nextInt("Enter number of desired command: ");
             System.out.println();
             if (input > 0 && input <= commands.size()) {
                 commands.get(input - 1).execute();
             } else if (input == 0) {
                 System.out.println(Colors.likeWarning("Shutdown"));
-                reader.close();
+                console.close();
                 return;
             } else {
                 System.out.println(Colors.likeError("Invalid option"));

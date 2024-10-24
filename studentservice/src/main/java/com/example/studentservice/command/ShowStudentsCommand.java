@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @Order(1)
-@CommandGroup("anonymous")
+@CommandGroup("user-menu")
 public class ShowStudentsCommand implements Command {
     private final StudentService service;
     private final PagingUtil pagingUtil;
