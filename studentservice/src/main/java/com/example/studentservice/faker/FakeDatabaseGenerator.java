@@ -1,8 +1,9 @@
 package com.example.studentservice.faker;
 
 import com.example.studentservice.model.Address;
-import com.example.studentservice.model.Referent;
+import com.example.studentservice.model.Role;
 import com.example.studentservice.model.Student;
+import com.example.studentservice.model.User;
 import com.example.studentservice.model.YearOfStudies;
 import com.example.studentservice.util.CycleIterator;
 import com.example.studentservice.util.LongGenerator;
@@ -30,8 +31,9 @@ public class FakeDatabaseGenerator {
     private final String LINE = "-";
     private final String LINES = LINE.repeat(200);
 
-    private final int STUDENTS = 50;
+    private final int ADMINS = 10;
     private final int REFERENTS = 20;
+    private final int STUDENTS = 50;
 
     private final String encodedPassword = "$2a$10$JCYrt8QGHg4suBXWiRgjKu93h5DCq3yFDXMDsTY/Itkgeu3h3pCE6";
 
@@ -48,8 +50,10 @@ public class FakeDatabaseGenerator {
         out.println("--");
         out.println("-- Script generates database for student-service");
         out.println("-- It generates:");
+        out.println("--\t- "   + (ADMINS + REFERENTS) + " users");
+        out.println("--\t\t- "   + ADMINS + " admins");
+        out.println("--\t\t- "   + REFERENTS + " referents");
         out.println("--\t- "   + STUDENTS + " students");
-        out.println("--\t- "   + REFERENTS + " referents");
         out.println("--");
 
         out.flush();
@@ -58,25 +62,25 @@ public class FakeDatabaseGenerator {
     public void generate() {
         generateHeader(out);
 
+        // generating users
+        LongGenerator userId = new LongGenerator();
+        Map<Long, User> users = generateUsers(userId);
+
         // generating students
         LongGenerator studentId = new LongGenerator();
         Map<Long, Student> students = generateStudents(studentId);
 
-        // generating referents
-        LongGenerator referentId = new LongGenerator();
-        Map<Long, Referent> referents = generateReferents(referentId);
-
         //////////
+
+        // inserting users
+        printToSqlInsert(users.values(), "Inserting users", out, SqlUtil::toSqlInsert);
+        // altering user_id_seq
+        printSequenceRestart(ADMINS + REFERENTS, userId, "user_id_seq", out);
 
         // inserting students
         printToSqlInsert(students.values(), "Inserting students", out, SqlUtil::toSqlInsert);
         // altering student_id_seq
         printSequenceRestart(STUDENTS, studentId, "student_id_seq", out);
-
-        // inserting referents
-        printToSqlInsert(referents.values(), "Inserting referents", out, SqlUtil::toSqlInsert);
-        // altering referent_id_seq
-        printSequenceRestart(REFERENTS, referentId, "referent_id_seq", out);
 
         out.close();
     }
@@ -103,21 +107,34 @@ public class FakeDatabaseGenerator {
         return students;
     }
 
-    private Map<Long, Referent> generateReferents(LongGenerator referentId) {
-        HashMap<Long, Referent> referents = new HashMap<>(REFERENTS);
+    private Map<Long, User> generateUsers(LongGenerator userId) {
+        HashMap<Long, User> users = new HashMap<>(ADMINS + REFERENTS);
 
-        for (int i = 0; i < REFERENTS; i++) {
-            Referent referent = new Referent(
-                    referentId.next(),
+        for (int i = 0; i < ADMINS; i++) {
+            User user = new User(
+                    userId.next(),
                     faker.name().firstName(),
                     escapeApostrophe(faker.name().lastName()),
-                    "referent" + referentId.current(),
-                    encodedPassword
+                    "admin" + userId.current(),
+                    encodedPassword,
+                    Role.ADMIN
             );
-            referents.put(referent.getId(), referent);
+            users.put(user.getId(), user);
         }
 
-        return referents;
+        for (int i = 0; i < REFERENTS; i++) {
+            User user = new User(
+                    userId.next(),
+                    faker.name().firstName(),
+                    escapeApostrophe(faker.name().lastName()),
+                    "referent" + userId.current(),
+                    encodedPassword,
+                    Role.REFERENT
+            );
+            users.put(user.getId(), user);
+        }
+
+        return users;
     }
 
     private <T> void printToSqlInsert(Collection<T> values, String linesDescription, PrintWriter out, Function<T, String> fun) {

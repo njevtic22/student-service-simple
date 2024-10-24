@@ -1,7 +1,7 @@
 package com.example.studentservice.faker;
 
-import com.example.studentservice.model.Referent;
 import com.example.studentservice.model.Student;
+import com.example.studentservice.model.User;
 
 public class SqlUtil {
     public static String toSqlInsert(Student student) {
@@ -20,13 +20,14 @@ public class SqlUtil {
                 student.getYearOfStudies().ordinal() + ");";
     }
 
-    public static String toSqlInsert(Referent referent) {
-        return "insert into referents (id, name, surname, username, password) values (" +
-                referent.getId() + ", '" +
-                referent.getName() + "', '" +
-                referent.getSurname() + "', '" +
-                referent.getUsername() + "', '" +
-                referent.getPassword() + "');";
+    public static String toSqlInsert(User user) {
+        return "insert into users (id, name, surname, username, password, role) values (" +
+                user.getId() + ", '" +
+                user.getName() + "', '" +
+                user.getSurname() + "', '" +
+                user.getUsername() + "', '" +
+                user.getPassword() + "', '" +
+                user.getRole().toString() + "');";
     }
 
     public static String toSqlAlterSequenceRestart(String sequenceName, long restartWith) {
