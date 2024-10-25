@@ -1,5 +1,7 @@
-package com.example.studentservice.command;
+package com.example.studentservice.command.admin;
 
+import com.example.studentservice.command.Command;
+import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.model.User;
 import com.example.studentservice.service.UserService;
 import com.example.studentservice.util.PagingUtil;
@@ -14,7 +16,7 @@ import java.util.List;
 
 @Component
 @Order(2)
-@CommandGroup("user-menu")
+@CommandGroup("admin-menu")
 public class ShowUsersCommand implements Command {
     private final UserService service;
     private final PagingUtil pagingUtil;
