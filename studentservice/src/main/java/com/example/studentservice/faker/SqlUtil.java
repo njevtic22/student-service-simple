@@ -5,11 +5,10 @@ import com.example.studentservice.model.User;
 
 public class SqlUtil {
     public static String toSqlInsert(Student student) {
-        return "insert into students (id, name, surname, parents_name, index, birth_date, city, street, number, phone, email, year_of_studies) values (" +
+        return "insert into students (id, name, surname, index, birth_date, city, street, number, phone, email, year_of_studies) values (" +
                 student.getId() + ", '" +
                 student.getName() + "', '" +
                 student.getSurname() + "', '" +
-                student.getParentsName() + "', '" +
                 student.getIndex() +  "', '" +
                 student.getBirthDate() + "', '" +
                 student.getAddress().getCity() + "', '" +

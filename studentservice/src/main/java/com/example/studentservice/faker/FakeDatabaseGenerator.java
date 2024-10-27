@@ -93,7 +93,6 @@ public class FakeDatabaseGenerator {
                     studentId.next(),
                     faker.name().firstName(),
                     escapeApostrophe(faker.name().lastName()),
-                    faker.name().firstName(),
                     generateIndex(faker, studentId.current()),
                     generatePastLocalDate(faker, referenceDate),
                     addresses.next(),
