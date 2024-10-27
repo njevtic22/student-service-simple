@@ -1,5 +1,7 @@
-package com.example.studentservice.command;
+package com.example.studentservice.command.referent;
 
+import com.example.studentservice.command.Command;
+import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.model.Address;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.service.StudentService;
@@ -15,7 +17,7 @@ import java.util.List;
 
 @Component
 @Order(1)
-@CommandGroup("user-menu")
+@CommandGroup("referent-menu")
 public class ShowStudentsCommand implements Command {
     private final StudentService service;
     private final PagingUtil pagingUtil;
@@ -48,15 +50,16 @@ public class ShowStudentsCommand implements Command {
         List<Student> students = service.getAll(pageable).getContent();
 
         table.addLine();
-        table.addRow("Name", "Surname", "Parents name", "Index", "Birth date", "Address", "Phone", "Email", "Year of studies");
+        table.addRow("Row", "Name", "Surname", "Index", "Birth date", "Address", "Phone", "Email", "Year of studies");
         table.addLine();
 
+        int index = 0;
         for (Student student : students) {
             Address address = student.getAddress();
             table.addRow(
+                    String.valueOf(++index),
                     student.getName(),
                     student.getSurname(),
-                    student.getParentsName(),
                     student.getIndex(),
                     student.getBirthDate().toString(),
                     address.getCity() + ", " + address.getStreet() + " " + address.getNumber(),

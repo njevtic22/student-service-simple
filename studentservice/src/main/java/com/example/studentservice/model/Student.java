@@ -28,9 +28,6 @@ public class Student {
     @Column(nullable = false)
     private String surname;
 
-    @Column(nullable = false)
-    private String parentsName;
-
     @Column(nullable = false, unique = true)
     private String index;
 
@@ -52,15 +49,14 @@ public class Student {
 
     public Student() {}
 
-    public Student(String name, String surname, String parentsName, String index, LocalDate birthDate, Address address, String phone, String email, YearOfStudies yearOfStudies) {
-        this(null, name, surname, parentsName, index, birthDate, address, phone, email, yearOfStudies);
+    public Student(String name, String surname, String index, LocalDate birthDate, Address address, String phone, String email, YearOfStudies yearOfStudies) {
+        this(null, name, surname, index, birthDate, address, phone, email, yearOfStudies);
     }
 
-    public Student(Long id, String name, String surname, String parentsName, String index, LocalDate birthDate, Address address, String phone, String email, YearOfStudies yearOfStudies) {
+    public Student(Long id, String name, String surname, String index, LocalDate birthDate, Address address, String phone, String email, YearOfStudies yearOfStudies) {
         this.id = id;
         this.name = name;
         this.surname = surname;
-        this.parentsName = parentsName;
         this.index = index;
         this.birthDate = birthDate;
         this.address = address;
@@ -91,10 +87,6 @@ public class Student {
 
     public String getSurname() {
         return surname;
-    }
-
-    public String getParentsName() {
-        return parentsName;
     }
 
     public String getIndex() {

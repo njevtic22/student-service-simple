@@ -17,7 +17,7 @@ public class MainRunner implements ApplicationRunner {
     private final ConsoleReader console;
     private final Menu menu;
 
-    public MainRunner(@CommandGroup("anonymous") List<Command> commands, ConsoleReader console, Menu menu) {
+    public MainRunner(@CommandGroup("anonymous-menu") List<Command> commands, ConsoleReader console, Menu menu) {
         this.commands = commands;
         this.console = console;
         this.menu = menu;

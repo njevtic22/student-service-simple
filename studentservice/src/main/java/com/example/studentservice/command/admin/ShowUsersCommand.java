@@ -1,5 +1,7 @@
-package com.example.studentservice.command;
+package com.example.studentservice.command.admin;
 
+import com.example.studentservice.command.Command;
+import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.model.User;
 import com.example.studentservice.service.UserService;
 import com.example.studentservice.util.PagingUtil;
@@ -14,7 +16,7 @@ import java.util.List;
 
 @Component
 @Order(2)
-@CommandGroup("user-menu")
+@CommandGroup("admin-menu")
 public class ShowUsersCommand implements Command {
     private final UserService service;
     private final PagingUtil pagingUtil;
@@ -41,13 +43,13 @@ public class ShowUsersCommand implements Command {
         Pageable pageable = pagingUtil.getRequest(sortOptions);
         List<User> users = service.getAll(pageable).getContent();
 
-        // TODO: add row number
         table.addLine();
-        table.addRow("Name", "Surname", "Username", "Role");
+        table.addRow("Row", "Name", "Surname", "Username", "Role");
         table.addLine();
 
+        int index = 0;
         for (User user : users) {
-            table.addRow(user.getName(), user.getSurname(), user.getUsername(), user.getRole().toString());
+            table.addRow(String.valueOf(++index), user.getName(), user.getSurname(), user.getUsername(), user.getRole().toString());
             table.addLine();
         }
 
