@@ -49,9 +49,8 @@ public class ShowStudentsCommand implements Command {
         Pageable pageable = pagingUtil.getRequest(sortOptions);
         List<Student> students = service.getAll(pageable).getContent();
 
-        // TODO: remove parents name
         table.addLine();
-        table.addRow("Row", "Name", "Surname", "Parents name", "Index", "Birth date", "Address", "Phone", "Email", "Year of studies");
+        table.addRow("Row", "Name", "Surname", "Index", "Birth date", "Address", "Phone", "Email", "Year of studies");
         table.addLine();
 
         int index = 0;
@@ -61,7 +60,6 @@ public class ShowStudentsCommand implements Command {
                     String.valueOf(++index),
                     student.getName(),
                     student.getSurname(),
-                    student.getParentsName(),
                     student.getIndex(),
                     student.getBirthDate().toString(),
                     address.getCity() + ", " + address.getStreet() + " " + address.getNumber(),
