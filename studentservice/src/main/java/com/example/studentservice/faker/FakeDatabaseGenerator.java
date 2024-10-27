@@ -114,7 +114,7 @@ public class FakeDatabaseGenerator {
                     userId.next(),
                     faker.name().firstName(),
                     escapeApostrophe(faker.name().lastName()),
-                    "admin" + userId.current(),
+                    "admin" + (i + 1),
                     encodedPassword,
                     Role.ADMIN
             );
@@ -126,7 +126,7 @@ public class FakeDatabaseGenerator {
                     userId.next(),
                     faker.name().firstName(),
                     escapeApostrophe(faker.name().lastName()),
-                    "referent" + userId.current(),
+                    "referent" + (i + 1),
                     encodedPassword,
                     Role.REFERENT
             );
