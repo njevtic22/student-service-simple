@@ -39,15 +39,13 @@ public class LoginCommand implements Command {
 
     @Override
     public void execute() {
-//        String username = console.nextLine("Enter username: ");
-//        String password = console.nextLine("Enter password: ");
-
-        // Handle exception when user not found by username
-        User authenticated = service.authenticate("", "");
+        String username = console.nextLine("Enter username: ");
+        String password = console.nextLine("Enter password: ");
+        User authenticated = service.authenticate(username, password);
 
         List<Command> chosenCommands = getChosenCommands(authenticated.getRole());
 
-        System.out.println(authenticated.getName() + " " + authenticated.getSurname() + " successfully logged in");
+        System.out.println("\n" + authenticated.getName() + " " + authenticated.getSurname() + " successfully logged in");
         while (true) {
             System.out.println("Following commands are available:");
             menu.printCommands(chosenCommands);
