@@ -1,10 +1,10 @@
 package com.example.studentservice.security;
 
-import com.example.studentservice.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthenticationService {
-    User authenticate(String username, String password);
+    UserDetails authenticate(String username, String password);
 
     void invalidateAuthentication();
-    User getAuthenticated();
+    UserDetails getAuthenticated();
 }

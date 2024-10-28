@@ -41,7 +41,7 @@ public class LoginCommand implements Command {
     public void execute() {
         String username = console.nextLine("Enter username: ");
         String password = console.nextLine("Enter password: ");
-        User authenticated = service.authenticate(username, password);
+        User authenticated = (User) service.authenticate(username, password);
 
         List<Command> chosenCommands = getChosenCommands(authenticated.getRole());
 
