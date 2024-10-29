@@ -50,7 +50,7 @@ public class AddReferentCommand implements Command {
                 System.out.println();
                 System.out.println(Colors.likeError(e.getMessage()));
 
-                boolean tryAgain = console.nextDecision("Would you like to try again: ");
+                boolean tryAgain = console.nextDecision("Would you like to try again (enter \"yes\" or \"no\"): ");
                 if (!tryAgain) {
                     break;
                 }

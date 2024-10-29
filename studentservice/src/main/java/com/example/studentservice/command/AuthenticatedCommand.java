@@ -37,10 +37,9 @@ public class AuthenticatedCommand implements Command {
     @Override
     public void execute() {
         User authenticated = (User) service.getAuthenticated();
-        // TODO: separate this in another class
-        List<Command> chosenCommands = getChosenCommands(authenticated.getRole());
-
         System.out.println("\n" + authenticated.getName() + " " + authenticated.getSurname() + " successfully logged in");
+
+        List<Command> chosenCommands = getChosenCommands(authenticated.getRole());
         while (true) {
             System.out.println("Following commands are available:");
             menu.printCommands(chosenCommands);

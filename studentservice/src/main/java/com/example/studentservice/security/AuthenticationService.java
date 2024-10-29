@@ -6,5 +6,6 @@ public interface AuthenticationService {
     UserDetails authenticate(String username, String password);
 
     void invalidateAuthentication();
+
     UserDetails getAuthenticated();
 }
