@@ -45,6 +45,7 @@ public class MainRunner implements ApplicationRunner {
         }
     }
 
+    // TODO: Remove this
     private void executeCommand(Command command) {
         try {
             command.execute();

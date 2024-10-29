@@ -1,10 +1,12 @@
 package com.example.studentservice.service;
 
 import com.example.studentservice.core.error.EntityNotFoundException;
+import com.example.studentservice.core.error.UniquePropertyException;
 import com.example.studentservice.model.User;
 import com.example.studentservice.repository.UserRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -12,14 +14,25 @@ import java.util.Objects;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
+    private final PasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepository repository) {
+    public UserServiceImpl(UserRepository repository, PasswordEncoder encoder) {
         this.repository = repository;
+        this.encoder = encoder;
     }
 
     @Override
-    public User add(User newT) {
-        return null;
+    public User add(User newUser) {
+        validateUsername(newUser.getUsername());
+
+        User toAdd = new User(
+                newUser.getName(),
+                newUser.getSurname(),
+                newUser.getUsername(),
+                encoder.encode(newUser.getPassword()),
+                newUser.getRole()
+        );
+        return repository.save(toAdd);
     }
 
     @Override
@@ -49,5 +62,20 @@ public class UserServiceImpl implements UserService {
         Objects.requireNonNull(username);
         return repository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User", "username", username));
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword, String repeatedPassword) {
+
+    }
+
+    private void validateUsername(String username) {
+        if (repository.existsByUsername(username)) {
+            throw new UniquePropertyException("Username '" + username + "' is already taken.");
+        }
+    }
+
+    private void validatePasswordMatch(User existingUser, String oldPassword, String newPassword, String repeatedPassword) {
+
     }
 }
