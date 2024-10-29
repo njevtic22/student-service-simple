@@ -23,7 +23,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User add(User newUser) {
-        validateUsername(newUser.getUsername());
+//        Validation called outside of service
+//        validateUsername(newUser.getUsername());
 
         User toAdd = new User(
                 newUser.getName(),
@@ -65,12 +66,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean existsByUsername(String username) {
+        return repository.existsByUsername(username);
+    }
+
+    @Override
     public void changePassword(String oldPassword, String newPassword, String repeatedPassword) {
 
     }
-
-    private void validateUsername(String username) {
-        if (repository.existsByUsername(username)) {
+    @Override
+    public void validateUsername(String username) {
+        // TODO: add no whitespace check
+        if (existsByUsername(username)) {
             throw new UniquePropertyException("Username '" + username + "' is already taken.");
         }
     }
