@@ -9,5 +9,7 @@ public interface UserService extends CrudService<User> {
 
     void validateUsername(String username);
 
+    void validatePassword(String password);
+
     void changePassword(/* Long userId,*/ String oldPassword, String newPassword, String repeatedPassword);
 }

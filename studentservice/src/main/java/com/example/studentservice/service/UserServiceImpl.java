@@ -1,23 +1,30 @@
 package com.example.studentservice.service;
 
 import com.example.studentservice.core.error.EntityNotFoundException;
+import com.example.studentservice.core.error.InvalidPasswordException;
 import com.example.studentservice.core.error.UniquePropertyException;
 import com.example.studentservice.model.User;
 import com.example.studentservice.repository.UserRepository;
+import org.passay.PasswordData;
+import org.passay.PasswordValidator;
+import org.passay.RuleResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
+    private final PasswordValidator validator;
     private final PasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepository repository, PasswordEncoder encoder) {
+    public UserServiceImpl(UserRepository repository, PasswordValidator validator, PasswordEncoder encoder) {
         this.repository = repository;
+        this.validator = validator;
         this.encoder = encoder;
     }
 
@@ -79,6 +86,18 @@ public class UserServiceImpl implements UserService {
         // TODO: add no whitespace check
         if (existsByUsername(username)) {
             throw new UniquePropertyException("Username '" + username + "' is already taken.");
+        }
+    }
+
+    @Override
+    public void validatePassword(String password) {
+        if (password == null) {
+            throw new InvalidPasswordException(List.of("Password must not be null"));
+        }
+
+        RuleResult result = validator.validate(new PasswordData(password));
+        if (!result.isValid()) {
+            throw new InvalidPasswordException(validator.getMessages(result));
         }
     }
 

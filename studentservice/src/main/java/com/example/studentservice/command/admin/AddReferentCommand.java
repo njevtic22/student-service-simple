@@ -65,8 +65,7 @@ public class AddReferentCommand implements Command {
         String name = console.nextLine("Enter name: ");
         String surname = console.nextLine("Enter surname: ");
         String username = readValidUsername();
-        // TODO: validate password
-        String password = console.nextLine("Enter password: ");
+        String password = readValidPassword();
 
         return new User(
                 name,
@@ -91,5 +90,21 @@ public class AddReferentCommand implements Command {
             System.out.println();
         };
         return input.getValid(username, validator, handler);
+    }
+
+    private String readValidPassword() {
+        Supplier<String> password = () -> console.nextLine("Enter password: ");
+        Consumer<String> validator = service::validatePassword;
+        Consumer<RuntimeException> handler = e -> {
+            System.out.println();
+            System.out.println(Colors.likeError(e.getMessage()));
+
+            boolean tryAgain = console.nextDecision("Would you like to try again (enter \"yes\" or \"no\"): ");
+            if (!tryAgain) {
+                throw new InputCanceledException();
+            }
+            System.out.println();
+        };
+        return input.getValid(password, validator, handler);
     }
 }
