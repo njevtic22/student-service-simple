@@ -83,7 +83,10 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public void validateUsername(String username) {
-        // TODO: add no whitespace check
+        if (username.matches("(.*?)\\s(.*?)")) {
+            throw new IllegalArgumentException("Username can not contain any space");
+        }
+
         if (existsByUsername(username)) {
             throw new UniquePropertyException("Username '" + username + "' is already taken.");
         }
