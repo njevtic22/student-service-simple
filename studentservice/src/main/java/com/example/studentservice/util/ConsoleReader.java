@@ -1,5 +1,6 @@
 package com.example.studentservice.util;
 
+import com.example.studentservice.core.error.InputCanceledException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 @Component
 public class ConsoleReader {
@@ -123,6 +125,33 @@ public class ConsoleReader {
 //        ExceptionHandler<InputMismatchException> handler = e ->
 //                cout.println(Colors.likeError("\nYou did not enter anything.\nTry again.\n"));
 //        return nextRead(label, strReader, handler);
+    }
+
+    public String nextValidLine(Consumer<String> validator) {
+        return nextValidLine("", validator);
+    }
+
+    public String nextValidLine(String label, Consumer<String> validator) {
+        String finalInput = null;
+
+        while (finalInput == null) {
+            String tmp = nextLine(label);
+            try {
+                validator.accept(tmp);
+            } catch (RuntimeException e) {
+                cout.println();
+                cout.println(Colors.likeError(e.getMessage()));
+
+                boolean tryAgain = nextDecision("Would you like to try again (enter \"yes\" or \"no\"): ");
+                if (!tryAgain) {
+                    throw new InputCanceledException();
+                }
+                cout.println();
+                continue;
+            }
+            finalInput = tmp;
+        }
+        return finalInput;
     }
 
     public boolean nextBoolean() {

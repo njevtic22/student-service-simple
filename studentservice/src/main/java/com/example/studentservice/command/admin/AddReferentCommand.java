@@ -9,12 +9,8 @@ import com.example.studentservice.model.User;
 import com.example.studentservice.service.UserService;
 import com.example.studentservice.util.Colors;
 import com.example.studentservice.util.ConsoleReader;
-import com.example.studentservice.util.InputValidator;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Component
 @Order(1)
@@ -22,12 +18,10 @@ import java.util.function.Supplier;
 public class AddReferentCommand implements Command {
     private final UserService service;
     private final ConsoleReader console;
-    private final InputValidator input;
 
-    public AddReferentCommand(UserService service, ConsoleReader console, InputValidator input) {
+    public AddReferentCommand(UserService service, ConsoleReader console) {
         this.service = service;
         this.console = console;
-        this.input = input;
     }
 
     @Override
@@ -64,8 +58,8 @@ public class AddReferentCommand implements Command {
         System.out.println("Adding referent");
         String name = console.nextLine("Enter name: ");
         String surname = console.nextLine("Enter surname: ");
-        String username = readValidUsername();
-        String password = readValidPassword();
+        String username = console.nextValidLine("Enter username: ", service::validateUsername);
+        String password = console.nextValidLine("Enter password: ", service::validatePassword);
 
         return new User(
                 name,
@@ -74,37 +68,5 @@ public class AddReferentCommand implements Command {
                 password,
                 Role.REFERENT
         );
-    }
-
-    private String readValidUsername() {
-        Supplier<String> username = () -> console.nextLine("Enter username: ");
-        Consumer<String> validator = service::validateUsername;
-        Consumer<RuntimeException> handler = e -> {
-            System.out.println();
-            System.out.println(Colors.likeError(e.getMessage()));
-
-            boolean tryAgain = console.nextDecision("Would you like to try again (enter \"yes\" or \"no\"): ");
-            if (!tryAgain) {
-                throw new InputCanceledException();
-            }
-            System.out.println();
-        };
-        return input.getValid(username, validator, handler);
-    }
-
-    private String readValidPassword() {
-        Supplier<String> password = () -> console.nextLine("Enter password: ");
-        Consumer<String> validator = service::validatePassword;
-        Consumer<RuntimeException> handler = e -> {
-            System.out.println();
-            System.out.println(Colors.likeError(e.getMessage()));
-
-            boolean tryAgain = console.nextDecision("Would you like to try again (enter \"yes\" or \"no\"): ");
-            if (!tryAgain) {
-                throw new InputCanceledException();
-            }
-            System.out.println();
-        };
-        return input.getValid(password, validator, handler);
     }
 }
