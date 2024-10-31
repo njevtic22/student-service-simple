@@ -34,15 +34,6 @@ public class AddReferentCommand implements Command {
                 added = service.add(newReferent);
                 System.out.println("Referent added");
 
-            } catch (UniquePropertyException e) {
-                System.out.println();
-                System.out.println(Colors.likeError(e.getMessage()));
-
-                boolean tryAgain = console.nextDecision("Would you like to try again (enter \"yes\" or \"no\"): ");
-                if (!tryAgain) {
-                    break;
-                }
-                System.out.println();
             } catch (InputCanceledException e) {
                 return;
             }
