@@ -41,6 +41,8 @@ public class SimpleAuthenticationService implements AuthenticationService {
 //    userService.getByUsername(...) can be used instead of copying previousAuth
 //    but it requires another query to database and all of that just to keep
 //    all User data up to date even though Spring security uses just UserDetails
+//
+//    Should UserDetails object be changed (reauthentication) in SecurityContext after changing password?
     @Override
     public UserDetails reauthenticate(String changedUsername) {
 //        Solution 1
