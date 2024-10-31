@@ -1,22 +1,24 @@
-package com.example.studentservice.command;
+package com.example.studentservice.command.shared;
 
+import com.example.studentservice.command.Command;
+import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.menu.Menu;
 import com.example.studentservice.model.Role;
 import com.example.studentservice.model.User;
 import com.example.studentservice.security.AuthenticationService;
 import com.example.studentservice.util.Colors;
 import com.example.studentservice.util.ConsoleReader;
-import org.springframework.beans.factory.annotation.Qualifier;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-@Qualifier("authenticated-command")
 public class AuthenticatedCommand implements Command {
     private final AuthenticationService service;
     private final List<Command> adminCommands;
     private final List<Command> referentCommands;
+    private final List<Command> sharedCommands;
     private final ConsoleReader console;
     private final Menu menu;
 
@@ -24,14 +26,22 @@ public class AuthenticatedCommand implements Command {
             AuthenticationService service,
             @CommandGroup("admin-menu") List<Command> adminCommands,
             @CommandGroup("referent-menu") List<Command> referentCommands,
+            @CommandGroup("user-shared") List<Command> sharedCommands,
             ConsoleReader console,
             Menu menu
     ) {
         this.service = service;
         this.adminCommands = adminCommands;
         this.referentCommands = referentCommands;
+        this.sharedCommands = sharedCommands;
         this.console = console;
         this.menu = menu;
+    }
+
+    @PostConstruct
+    public void init() {
+        adminCommands.addAll(sharedCommands);
+        referentCommands.addAll(sharedCommands);
     }
 
     @Override

@@ -56,8 +56,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(Long id, User changes) {
-        return null;
+    public User update(String existingUsername, User changes) {
+        Objects.requireNonNull(changes, "User changes must not be null");
+
+        // TODO: Perhaps call validation outside of service
+        User existing = getByUsername(existingUsername);
+        if (!existing.getUsername().equals(changes.getUsername())) {
+            validateUsername(changes.getUsername());
+        }
+
+        User updated = new User(
+                existing.getId(),
+                changes.getName(),
+                changes.getSurname(),
+                changes.getUsername(),
+                existing.getPassword(),
+                existing.getRole()
+        );
+        return repository.save(updated);
     }
 
     @Override

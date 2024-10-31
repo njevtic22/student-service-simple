@@ -13,7 +13,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-@Order(1)
+@Order(2)
 @CommandGroup("admin-menu")
 public class AddReferentCommand implements Command {
     private final UserService service;

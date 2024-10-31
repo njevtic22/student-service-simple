@@ -1,13 +1,11 @@
 package com.example.studentservice.command.anonymous;
 
-import com.example.studentservice.command.AuthenticatedCommand;
 import com.example.studentservice.command.Command;
 import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.model.User;
 import com.example.studentservice.security.AuthenticationService;
 import com.example.studentservice.util.Colors;
 import com.example.studentservice.util.ConsoleReader;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
@@ -17,16 +15,17 @@ import org.springframework.stereotype.Component;
 @CommandGroup("anonymous-menu")
 public class LoginCommand implements Command {
     private final AuthenticationService service;
-    private final AuthenticatedCommand authCommand;
+    private final Command authCommand;
     private final ConsoleReader console;
 
     public LoginCommand(
             AuthenticationService service,
-            @Qualifier("authenticated-command") AuthenticatedCommand authCommand,
+            // Injected by name
+            Command authenticatedCommand,
             ConsoleReader console
     ) {
         this.service = service;
-        this.authCommand = authCommand;
+        this.authCommand = authenticatedCommand;
         this.console = console;
     }
 

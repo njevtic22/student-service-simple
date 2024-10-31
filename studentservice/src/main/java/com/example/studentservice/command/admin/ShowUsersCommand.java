@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 @Component
-@Order(2)
+@Order(1)
 @CommandGroup("admin-menu")
 public class ShowUsersCommand implements Command {
     private final UserService service;
