@@ -37,7 +37,8 @@ public class ShowUsersCommand implements Command {
                 new Pair<>("Surname ascending", "surname,asc"),
                 new Pair<>("Surname descending", "surname,desc"),
                 new Pair<>("Username ascending", "username,asc"),
-                new Pair<>("Username descending", "username,desc")
+                new Pair<>("Username descending", "username,desc"),
+                new Pair<>("Unsorted", "id,asc")
         );
 
         Pageable pageable = pagingUtil.getRequest(sortOptions);

@@ -43,7 +43,8 @@ public class ShowStudentsCommand implements Command {
                 new Pair<>("Index ascending", "index,asc"),
                 new Pair<>("Index descending", "index,desc"),
                 new Pair<>("Year of studies ascending", "yearOfStudies,asc"),
-                new Pair<>("Year of studies descending", "yearOfStudies,desc")
+                new Pair<>("Year of studies descending", "yearOfStudies,desc"),
+                new Pair<>("Unsorted", "id,asc")
         );
 
         Pageable pageable = pagingUtil.getRequest(sortOptions);
