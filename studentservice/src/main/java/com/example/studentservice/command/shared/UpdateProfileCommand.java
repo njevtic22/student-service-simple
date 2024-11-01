@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 
 
 @Component
-@Order(3)
+@Order(2)
 @CommandGroup("user-shared")
 public class UpdateProfileCommand implements Command {
     private final UserService service;

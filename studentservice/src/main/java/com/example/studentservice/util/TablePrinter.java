@@ -73,6 +73,9 @@ public class TablePrinter {
         if (lineIndexes.contains(i)) {
             out.println(line);
         }
+
+        // Maybe do out.flush() at the end
+        // Also add parameter to programmatically increase all widths by fixed number
     }
 
     private String center(String str, int width) {
