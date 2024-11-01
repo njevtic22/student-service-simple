@@ -13,6 +13,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+// Add nextPassword and nextValidPassword
 @Component
 public class ConsoleReader {
     private final Scanner cin;
