@@ -24,17 +24,12 @@ public class AddReferentCommand implements Command {
 
     @Override
     public void execute() {
-        User added = null;
-        while (added == null) {
+        try {
+            User newReferent = readUser();
+            service.add(newReferent);
+            System.out.println("Referent added");
 
-            try {
-                User newReferent = readUser();
-                added = service.add(newReferent);
-                System.out.println("Referent added");
-
-            } catch (InputCanceledException e) {
-                return;
-            }
+        } catch (InputCanceledException ignored) {
         }
     }
 

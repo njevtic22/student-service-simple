@@ -29,6 +29,7 @@ public class DeleteReferentCommand implements Command {
             String deleteUsername = readUsername();
             service.delete(deleteUsername);
             System.out.println("Referent deleted");
+
         } catch (InputCanceledException ignored) {
         }
     }

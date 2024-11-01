@@ -31,17 +31,13 @@ public class UpdateProfileCommand implements Command {
     public void execute() {
         String authUsername = authService.getAuthenticated().getUsername();
 
-        User updated = null;
-        while (updated == null) {
-            try {
-                User changes = readChanges();
-                updated = service.update(authUsername, changes);
-                authService.reauthenticate(updated);
-                System.out.println("Profile updated");
+        try {
+            User changes = readChanges();
+            User updated = service.update(authUsername, changes);
+            authService.reauthenticate(updated);
+            System.out.println("Profile updated");
 
-            } catch (InputCanceledException e) {
-                return;
-            }
+        } catch (InputCanceledException ignored) {
         }
     }
 
