@@ -29,7 +29,7 @@ public class SimpleAuthenticationService implements AuthenticationService {
 //    https://stackoverflow.com/questions/14010326/how-to-change-the-login-name-for-the-current-user-with-spring-security-3-1/14174404#14174404
 //    search: spring security change security context after username change
 //
-//    Possible problem with chosen solution 1:
+//    Possible problem with chosen solution 1: (reauthenticate(String changedUsername))
 //    previousAuth is not retrieved from database, but from SecurityContext and therefore its data
 //    can be outdated after profile update, but if username, password and authorities are up to date
 //    does it really matter? (Spring security uses UserDetails and not User directly)
@@ -37,22 +37,23 @@ public class SimpleAuthenticationService implements AuthenticationService {
 //    That could be another reason why model.User class should not implement UserDetails interface
 //    because it could contain significantly more data than needed for Spring security
 //
-//    Solution 2
+//    Solution 2 (reauthenticate(String changedUsername))
 //    userService.getByUsername(...) can be used instead of copying previousAuth
 //    but it requires another query to database and all of that just to keep
 //    all User data up to date even though Spring security uses just UserDetails
 //
 //    Should UserDetails object be changed (reauthentication) in SecurityContext after changing password?
+
+//        Solution 3
     @Override
-    public UserDetails reauthenticate(String changedUsername) {
-//        Solution 1
+    public UserDetails reauthenticate(User changes) {
         User previousAuth = (User) getAuthenticated();
 
         User currentAuth = new User(
                 previousAuth.getId(),
-                previousAuth.getName(),
-                previousAuth.getSurname(),
-                changedUsername,
+                changes.getName(),
+                changes.getSurname(),
+                changes.getUsername(),
                 previousAuth.getPassword(),
                 previousAuth.getRole()
         );

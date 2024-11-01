@@ -36,7 +36,7 @@ public class UpdateProfileCommand implements Command {
             try {
                 User changes = readChanges();
                 updated = service.update(authUsername, changes);
-                authService.reauthenticate(updated.getUsername());
+                authService.reauthenticate(updated);
                 System.out.println("Profile updated");
 
             } catch (InputCanceledException e) {
