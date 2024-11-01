@@ -12,5 +12,5 @@ public interface CrudService<T> {
 
     T update(String identification, T changes);
 
-    void delete(Long id);
+    void delete(String identification);
 }

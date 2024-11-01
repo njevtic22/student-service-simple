@@ -36,7 +36,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String identification) {
 
     }
 }

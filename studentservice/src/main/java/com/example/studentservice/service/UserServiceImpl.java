@@ -2,7 +2,9 @@ package com.example.studentservice.service;
 
 import com.example.studentservice.core.error.EntityNotFoundException;
 import com.example.studentservice.core.error.InvalidPasswordException;
+import com.example.studentservice.core.error.MultipleDeletedRowsException;
 import com.example.studentservice.core.error.UniquePropertyException;
+import com.example.studentservice.model.Role;
 import com.example.studentservice.model.User;
 import com.example.studentservice.repository.UserRepository;
 import org.passay.PasswordData;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -72,8 +75,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Long id) {
+    @Transactional
+    public void delete(String username) {
+        if (!repository.existsByUsername(username)) {
+            throw new EntityNotFoundException("User", "username", username);
+        }
 
+        int rowsAffected = repository.deleteByUsername(username);
+        if (rowsAffected != 1) {
+            throw new MultipleDeletedRowsException("users", "username");
+        }
     }
 
     @Override
@@ -86,6 +97,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existsByUsernameAndRole(String username, Role role) {
+        return repository.existsByUsernameAndRole(username, role);
     }
 
     @Override

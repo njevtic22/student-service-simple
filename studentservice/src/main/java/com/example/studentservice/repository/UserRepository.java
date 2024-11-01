@@ -1,5 +1,6 @@
 package com.example.studentservice.repository;
 
+import com.example.studentservice.model.Role;
 import com.example.studentservice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,4 +10,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
     boolean existsByUsername(String username);
+
+    boolean existsByUsernameAndRole(String username, Role role);
+
+    int deleteByUsername(String username);
 }
