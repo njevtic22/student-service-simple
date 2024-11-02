@@ -2,6 +2,7 @@ package com.example.studentservice.command.admin;
 
 import com.example.studentservice.command.Command;
 import com.example.studentservice.command.CommandGroup;
+import com.example.studentservice.core.error.EntityNotFoundException;
 import com.example.studentservice.core.error.InputCanceledException;
 import com.example.studentservice.model.Role;
 import com.example.studentservice.service.UserService;
@@ -42,7 +43,7 @@ public class DeleteReferentCommand implements Command {
     private String readUsername() {
         Consumer<String> validator = inputUsername -> {
             if (!service.existsByUsernameAndRole(inputUsername, Role.REFERENT)) {
-                throw new IllegalArgumentException("User with username \"" + inputUsername + "\" is not referent");
+                throw new EntityNotFoundException("User with username \"" + inputUsername + "\" is not referent");
             }
         };
         return console.nextValidLine("Enter referents username: ", validator);

@@ -39,4 +39,9 @@ public class StudentServiceImpl implements StudentService {
     public void delete(String identification) {
 
     }
+
+    @Override
+    public boolean existsByIndex(String index) {
+        return repository.existsByIndex(index);
+    }
 }
