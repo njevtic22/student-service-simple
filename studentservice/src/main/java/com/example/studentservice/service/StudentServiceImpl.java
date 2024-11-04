@@ -34,8 +34,20 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student update(String index, Student changes) {
-        System.out.println("Updating student with index: " + index);
-        return null;
+        Student existing = getByIndex(index);
+
+        Student updated = new Student(
+                existing.getId(),
+                changes.getName(),
+                changes.getSurname(),
+                changes.getIndex(),
+                changes.getBirthDate(),
+                changes.getAddress(),
+                changes.getPhone(),
+                changes.getEmail(),
+                existing.getYearOfStudies()
+        );
+        return repository.save(updated);
     }
 
     @Override

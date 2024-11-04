@@ -68,7 +68,7 @@ public class UpdateStudentCommand implements Command {
 
         Consumer<String> emailValidator = newEmail -> {
             if (!existing.getEmail().equals(newEmail)) {
-                service.validateEmail(newEmail); //
+                service.validateEmail(newEmail);
             }
         };
         String email = console.nextValidLine("Enter students new email: ", emailValidator);

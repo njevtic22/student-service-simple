@@ -14,6 +14,7 @@ import java.util.Scanner;
 import java.util.function.Consumer;
 
 // Add nextPassword and nextValidPassword
+// Add nextValidXxx for each method
 @Component
 public class ConsoleReader {
     private final Scanner cin;
