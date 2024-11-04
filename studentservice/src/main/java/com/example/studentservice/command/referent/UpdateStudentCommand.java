@@ -4,12 +4,15 @@ import com.example.studentservice.command.Command;
 import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.core.error.EntityNotFoundException;
 import com.example.studentservice.core.error.InputCanceledException;
+import com.example.studentservice.model.Address;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.service.StudentService;
 import com.example.studentservice.util.ConsoleReader;
+import com.example.studentservice.util.DateTimeUtil;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.function.Consumer;
 
 
@@ -29,8 +32,8 @@ public class UpdateStudentCommand implements Command {
     public void execute() {
         try {
             String existingIndex = readIndex();
-//            Student changes = readChanges();
-//            service.update(existingIndex, changes);
+            Student changes = readChanges(existingIndex);
+            service.update(existingIndex, changes);
             System.out.println("Student updated");
 
         } catch (InputCanceledException ignored) {
@@ -51,7 +54,53 @@ public class UpdateStudentCommand implements Command {
         return console.nextValidLine("Enter students index: ", validator);
     }
 
-    private Student readChanges() {
-        return null;
+    private Student readChanges(String existingIndex) {
+        Student existing = service.getByIndex(existingIndex);
+
+        System.out.println("Changing students data");
+
+        Consumer<String> indexValidator = newIndex -> {
+            if (!existing.getIndex().equals(newIndex)) {
+                service.validateIndex(newIndex);
+            }
+        };
+        String index = console.nextValidLine("Enter students new index: ", indexValidator);
+
+        Consumer<String> emailValidator = newEmail -> {
+            if (!existing.getEmail().equals(newEmail)) {
+                service.validateEmail(newEmail); //
+            }
+        };
+        String email = console.nextValidLine("Enter students new email: ", emailValidator);
+
+        Consumer<String> phoneValidator = phone -> {
+            if (!phone.chars().allMatch(Character::isDigit)) {
+                throw new IllegalArgumentException("Phone number must contain only digits");
+            }
+        };
+        String phone = console.nextValidLine("Enter students new phone number: ", phoneValidator);
+
+        String name = console.nextLine("Enter students new name: ");
+        String surname = console.nextLine("Enter students new surname: ");
+        LocalDate birthDate = console.nextDate("Enter students new birthdate (format " + DateTimeUtil.RS_DATE + "): ", DateTimeUtil.RS_DATE);
+
+        String city = console.nextLine("Enter students new city: ");
+        String street = console.nextLine("Enter students new street: ");
+        int number = console.nextInt("Enter students new street number: ");
+
+        return new Student(
+                name,
+                surname,
+                index,
+                birthDate,
+                new Address(
+                        city,
+                        street,
+                        number
+                ),
+                phone,
+                email,
+                null
+        );
     }
 }

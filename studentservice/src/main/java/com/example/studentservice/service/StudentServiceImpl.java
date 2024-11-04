@@ -1,5 +1,7 @@
 package com.example.studentservice.service;
 
+import com.example.studentservice.core.error.EntityNotFoundException;
+import com.example.studentservice.core.error.UniquePropertyException;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.repository.StudentRepository;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +33,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student update(String identification, Student changes) {
+    public Student update(String index, Student changes) {
+        System.out.println("Updating student with index: " + index);
         return null;
     }
 
@@ -41,7 +44,31 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Student getByIndex(String index) {
+        return repository.findByIndex(index)
+                .orElseThrow(() -> new EntityNotFoundException("Student", "index", index));
+    }
+
+    @Override
     public boolean existsByIndex(String index) {
         return repository.existsByIndex(index);
+    }
+
+    @Override
+    public void validateIndex(String index) {
+        if (existsByIndex(index)) {
+            throw new UniquePropertyException("Student", "index", index);
+        }
+    }
+
+    @Override
+    public void validateEmail(String email) {
+        if (!email.matches(".+@.+\\..+")) {
+            throw new IllegalArgumentException("Email is not properly formed");
+        }
+
+        if (repository.existsByEmail(email)) {
+            throw new UniquePropertyException("Student", "email", email);
+        }
     }
 }
