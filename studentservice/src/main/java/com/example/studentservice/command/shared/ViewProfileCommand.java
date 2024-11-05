@@ -34,7 +34,6 @@ public class ViewProfileCommand implements Command {
 
         PrintWriter out = new PrintWriter(System.out);
         table.print(out);
-        out.flush();
         table.clear();
     }
 

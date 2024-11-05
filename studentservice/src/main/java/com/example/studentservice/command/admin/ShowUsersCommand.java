@@ -56,8 +56,7 @@ public class ShowUsersCommand implements Command {
 
         PrintWriter out = new PrintWriter(System.out);
         table.print(out);
-        // not close() so it could be still printed to console
-        out.flush();
+        // not out.close() so it could be still printed to console
         table.clear();
     }
 
