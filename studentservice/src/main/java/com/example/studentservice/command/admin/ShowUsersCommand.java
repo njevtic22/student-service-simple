@@ -32,13 +32,13 @@ public class ShowUsersCommand implements Command {
     @Override
     public void execute() {
         List<Pair<String, String>> sortOptions = List.of(
+                new Pair<>("Unsorted", "id,asc"),
                 new Pair<>("Name ascending", "name,asc"),
                 new Pair<>("Name descending", "name,desc"),
                 new Pair<>("Surname ascending", "surname,asc"),
                 new Pair<>("Surname descending", "surname,desc"),
                 new Pair<>("Username ascending", "username,asc"),
-                new Pair<>("Username descending", "username,desc"),
-                new Pair<>("Unsorted", "id,asc")
+                new Pair<>("Username descending", "username,desc")
         );
 
         Pageable pageable = pagingUtil.getRequest(sortOptions);

@@ -5,6 +5,7 @@ import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.model.Address;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.service.StudentService;
+import com.example.studentservice.util.DateTimeUtil;
 import com.example.studentservice.util.PagingUtil;
 import com.example.studentservice.util.Pair;
 import com.example.studentservice.util.TablePrinter;
@@ -22,11 +23,13 @@ public class ShowStudentsCommand implements Command {
     private final StudentService service;
     private final PagingUtil pagingUtil;
     private final TablePrinter table;
+    private final DateTimeUtil dateTime;
 
-    public ShowStudentsCommand(StudentService service, PagingUtil pagingUtil, TablePrinter table) {
+    public ShowStudentsCommand(StudentService service, PagingUtil pagingUtil, TablePrinter table, DateTimeUtil dateTime) {
         this.service = service;
         this.pagingUtil = pagingUtil;
         this.table = table;
+        this.dateTime = dateTime;
     }
 
     @Override
@@ -36,6 +39,7 @@ public class ShowStudentsCommand implements Command {
         // getRequest secures same field does not appear multiple times
 
         List<Pair<String, String>> sortOptions = List.of(
+                new Pair<>("Unsorted", "id,asc"),
                 new Pair<>("Name ascending", "name,asc"),
                 new Pair<>("Name descending", "name,desc"),
                 new Pair<>("Surname ascending", "surname,asc"),
@@ -43,8 +47,7 @@ public class ShowStudentsCommand implements Command {
                 new Pair<>("Index ascending", "index,asc"),
                 new Pair<>("Index descending", "index,desc"),
                 new Pair<>("Year of studies ascending", "yearOfStudies,asc"),
-                new Pair<>("Year of studies descending", "yearOfStudies,desc"),
-                new Pair<>("Unsorted", "id,asc")
+                new Pair<>("Year of studies descending", "yearOfStudies,desc")
         );
 
         Pageable pageable = pagingUtil.getRequest(sortOptions);
@@ -62,7 +65,7 @@ public class ShowStudentsCommand implements Command {
                     student.getName(),
                     student.getSurname(),
                     student.getIndex(),
-                    student.getBirthDate().toString(),
+                    dateTime.format(student.getBirthDate(), DateTimeUtil.RS_DATE),
                     address.getCity() + ", " + address.getStreet() + " " + address.getNumber(),
                     student.getPhone(),
                     student.getEmail(),
