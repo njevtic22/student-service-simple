@@ -18,7 +18,8 @@ public class ConsoleReader {
     private final Scanner cin;
     private final PrintStream cout;        // sugar code
     private final DateTimeUtil dateUtil;
-    private final Consumer<?> emptyValidator = o -> {};
+    // unnecessary because you could just call method which does not require validator
+    private final Consumer<?> empty = o -> {};
 
     public ConsoleReader(
             @Qualifier("scanner.system.in") Scanner cin,
@@ -30,12 +31,69 @@ public class ConsoleReader {
         this.dateUtil = dateUtil;
     }
 
+    public byte nextByte() {
+        return nextByte("");
+    }
+
+    public byte nextByte(String label) {
+        return nextByte(label, getEmpty());
+    }
+
+    public byte nextByte(Consumer<Byte> validator) {
+        return nextByte("", validator);
+    }
+
+    public byte nextByte(String label, Consumer<Byte> validator) {
+        return nextValid(label, cin::nextByte, validator, "byte");
+    }
+
+    public char nextChar() {
+        return nextChar("");
+    }
+
+    public char nextChar(String label) {
+        return nextChar(label, getEmpty());
+    }
+
+    public char nextChar(Consumer<Character> validator) {
+        return nextChar("", validator);
+    }
+
+    public char nextChar(String label, Consumer<Character> validator) {
+        Supplier<Character> reader = () -> {
+            String input = cin.next();
+            if (input.length() == 1) {
+                return input.charAt(0);
+            } else {
+                throw new InputMismatchException("Character is expected, but string is read");
+            }
+        };
+
+        return nextValid(label, reader, validator, "character");
+    }
+
+    public short nextShort() {
+        return nextShort("");
+    }
+
+    public short nextShort(String label) {
+        return nextShort(label, getEmpty());
+    }
+
+    public short nextShort(Consumer<Short> validator) {
+        return nextShort("", validator);
+    }
+
+    public short nextShort(String label, Consumer<Short> validator) {
+        return nextValid(label, cin::nextShort, validator, "short");
+    }
+
     public int nextInt() {
         return nextInt("");
     }
 
     public int nextInt(String label) {
-        return nextInt(label, castConsumer(emptyValidator));
+        return nextInt(label, getEmpty());
     }
 
     public int nextInt(Consumer<Integer> validator) {
@@ -92,8 +150,8 @@ public class ConsoleReader {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> Consumer<T> castConsumer(Consumer<?> consumer) {
-        return (Consumer<T>) consumer;
+    private <T> Consumer<T> getEmpty() {
+        return (Consumer<T>) empty;
     }
 
     private <T> T nextValid(String label, Supplier<T> reader, Consumer<T> validator, String type) {
