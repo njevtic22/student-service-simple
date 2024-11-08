@@ -104,6 +104,54 @@ public class ConsoleReader {
         return nextValid(label, cin::nextInt, validator, "integer");
     }
 
+    public long nextLong() {
+        return nextLong("");
+    }
+
+    public long nextLong(String label) {
+        return nextLong(label, getEmpty());
+    }
+
+    public long nextLong(Consumer<Long> validator) {
+        return nextLong("", validator);
+    }
+
+    public long nextLong(String label, Consumer<Long> validator) {
+        return nextValid(label, cin::nextLong, validator, "long");
+    }
+
+    public float nextFloat() {
+        return nextFloat("");
+    }
+
+    public float nextFloat(String label) {
+        return nextFloat(label, getEmpty());
+    }
+
+    public float nextFloat(Consumer<Float> validator) {
+        return nextFloat("", validator);
+    }
+
+    public float nextFloat(String label, Consumer<Float> validator) {
+        return nextValid(label, cin::nextFloat, validator, "float");
+    }
+
+    public double nextDouble() {
+        return nextDouble("");
+    }
+
+    public double nextDouble(String label) {
+        return nextDouble(label, getEmpty());
+    }
+
+    public double nextDouble(Consumer<Double> validator) {
+        return nextDouble("", validator);
+    }
+
+    public double nextDouble(String label, Consumer<Double> validator) {
+        return nextValid(label, cin::nextDouble, validator, "double");
+    }
+
     public boolean nextDecision() {
         return nextDecision("");
     }
