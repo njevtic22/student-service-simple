@@ -6,13 +6,15 @@ import org.springframework.stereotype.Component;
 
 import java.io.PrintStream;
 import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-// Add nextPassword and nextValidPassword
-// Add nextValidXxx for each method
+// TODO: Add nextPassword and nextValidPassword
 @Component
 public class ConsoleReader {
     private final Scanner cin;
@@ -152,6 +154,22 @@ public class ConsoleReader {
         return nextValid(label, cin::nextDouble, validator, "double");
     }
 
+    public boolean nextBoolean() {
+        return nextBoolean("");
+    }
+
+    public boolean nextBoolean(String label) {
+        return nextBoolean(label, getEmpty());
+    }
+
+    public boolean nextBoolean(Consumer<Boolean> validator) {
+        return nextBoolean("", validator);
+    }
+
+    public boolean nextBoolean(String label, Consumer<Boolean> validator) {
+        return nextValid(label, cin::nextBoolean, validator, "boolean");
+    }
+
     public String nextLine() {
         return nextLine("");
     }
@@ -226,6 +244,111 @@ public class ConsoleReader {
         return decision;
     }
 
+    public LocalDate nextDate() {
+        return nextDate("");
+    }
+
+    public LocalDate nextDate(String label) {
+        return nextDate(label, DateTimeUtil.ISO_DATE);
+    }
+
+    public LocalDate nextDate(String label, String format) {
+        return nextDate(label, format, getEmpty());
+    }
+
+    public LocalDate nextDate(Consumer<LocalDate> validator) {
+        return nextDate("", validator);
+    }
+
+    public LocalDate nextDate(String label, Consumer<LocalDate> validator) {
+        return nextDate(label, DateTimeUtil.ISO_DATE, validator);
+    }
+
+    public LocalDate nextDate(String label, String format, Consumer<LocalDate> validator) {
+        // If date format has spaces then this solution would not work
+        // then maybe it would be better to implement it like nextDateTime
+        Supplier<LocalDate> reader = () -> {
+            String input = cin.next();
+            return dateUtil.parseDate(input, format);
+        };
+
+        Consumer<DateTimeException> handler = e ->
+                cout.println(Colors.likeError("\nYou did not enter date in '" + format + "' format or date is invalid.\nTry again."));
+        return nextValid(label, reader, validator, Throwable::printStackTrace, handler);
+    }
+
+    public LocalTime nextTime() {
+        return nextTime("");
+    }
+
+    public LocalTime nextTime(String label) {
+        return nextTime(label, DateTimeUtil.ISO_TIME);
+    }
+
+    public LocalTime nextTime(String label, String format) {
+        return nextTime(label, format, getEmpty());
+    }
+
+    public LocalTime nextTime(Consumer<LocalTime> validator) {
+        return nextTime("", validator);
+    }
+
+    public LocalTime nextTime(String label, Consumer<LocalTime> validator) {
+        return nextTime(label, DateTimeUtil.ISO_TIME, validator);
+    }
+
+    public LocalTime nextTime(String label, String format, Consumer<LocalTime> validator) {
+        // If time format has spaces then this solution would not work
+        // then maybe it would be better to implement it like nextDateTime
+        Supplier<LocalTime> reader = () -> {
+            String input = cin.next();
+            return dateUtil.parseTime(input, format);
+        };
+
+        Consumer<DateTimeException> handler = e ->
+                cout.println(Colors.likeError("\nYou did not enter time in '" + format + "' format or time is invalid.\nTry again."));
+        return nextValid(label, reader, validator, Throwable::printStackTrace, handler);
+    }
+
+    public LocalDateTime nextDateTime() {
+        return nextDateTime("");
+    }
+
+    public LocalDateTime nextDateTime(String label) {
+        return nextDateTime(label, DateTimeUtil.ISO_DATE_TIME);
+    }
+
+    public LocalDateTime nextDateTime(String label, String format) {
+        return nextDateTime(label, format, getEmpty());
+    }
+
+    public LocalDateTime nextDateTime(Consumer<LocalDateTime> validator) {
+        return nextDateTime("", validator);
+    }
+
+    public LocalDateTime nextDateTime(String label, Consumer<LocalDateTime> validator) {
+        return nextDateTime(label, DateTimeUtil.ISO_DATE_TIME, validator);
+    }
+
+    public LocalDateTime nextDateTime(String label, String format, Consumer<LocalDateTime> validator) {
+        LocalDateTime date = null;
+        while (date == null) {
+            cout.print(label);
+            String input = cin.nextLine().strip();
+            try {
+                LocalDateTime tmp = dateUtil.parseDateTime(input, format);
+                validator.accept(tmp);
+                date = tmp;
+            } catch (DateTimeException e) {
+                cout.println(Colors.likeError(
+                        "\nYou did not enter date and time in '" + format + "' format or date and time is invalid.\nTry again."));
+            } catch (RuntimeException e) {
+                handleFailedValidation(e);
+            }
+        }
+        return date;
+    }
+
     public void close() {
         cin.close();
     }
@@ -233,6 +356,39 @@ public class ConsoleReader {
     @SuppressWarnings("unchecked")
     private <T> Consumer<T> getEmpty() {
         return (Consumer<T>) empty;
+    }
+
+    private <T> T nextValid(String label, Supplier<T> reader, Consumer<T> validator,  String type) {
+        Consumer<InputMismatchException> handler = e ->
+                cout.println(Colors.likeError("\nYou did not enter " + type + " or there was an overflow.\nTry again."));
+        return nextValid(label, reader, validator, handler);
+    }
+
+    private <T> T nextValid(String label, Supplier<T> reader, Consumer<T> validator,  Consumer<InputMismatchException> handler) {
+        return nextValid(label, reader, validator, handler, Throwable::printStackTrace);
+    }
+
+    private <T> T nextValid(
+            String label,
+            Supplier<T> reader,
+            Consumer<T> validator,
+            Consumer<InputMismatchException> mismatchHandler,
+            Consumer<DateTimeException> parseHandler
+    ) {
+        T input = null;
+
+        while (input == null) {
+            T tmp = nextRead(label, reader, mismatchHandler, parseHandler);
+            try {
+                validator.accept(tmp);
+            } catch (RuntimeException e) {
+                handleFailedValidation(e);
+                continue;
+            }
+            input = tmp;
+        }
+
+        return input;
     }
 
     private void handleFailedValidation(RuntimeException e) {
@@ -244,23 +400,6 @@ public class ConsoleReader {
             throw new InputCanceledException();
         }
         cout.println();
-    }
-
-    private <T> T nextValid(String label, Supplier<T> reader, Consumer<T> validator, String type) {
-        T input = null;
-
-        while (input == null) {
-            T tmp = nextRead(label, reader, type);
-            try {
-                validator.accept(tmp);
-            } catch (RuntimeException e) {
-                handleFailedValidation(e);
-                continue;
-            }
-            input = tmp;
-        }
-
-        return input;
     }
 
     private <T> T nextRead(String label, Supplier<T> reader, String type) {
