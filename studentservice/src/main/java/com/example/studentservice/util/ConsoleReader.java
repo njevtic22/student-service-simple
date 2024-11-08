@@ -4,6 +4,7 @@ import com.example.studentservice.core.error.InputCanceledException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.io.Console;
 import java.io.PrintStream;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -14,7 +15,6 @@ import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-// TODO: Add nextPassword and nextValidPassword
 @Component
 public class ConsoleReader {
     private final Scanner cin;
@@ -183,14 +183,21 @@ public class ConsoleReader {
     }
 
     public String nextLine(String label, Consumer<String> validator) {
+        return nextLine(label, validator, false);
+    }
+
+    public String nextLine(String label, Consumer<String> validator, boolean blankAllowed) {
         String input = null;
         while (input == null) {
             cout.print(label);
-            String tmp = cin.nextLine().strip();
+            String tmp = cin.nextLine();
 
-            if (tmp.isEmpty()) {
-                cout.println(Colors.likeError("\nYou did not enter anything.\nTry again."));
-                continue;
+            if (!blankAllowed) {
+                tmp = tmp.strip();
+                if (tmp.isEmpty()) {
+                    cout.println(Colors.likeError("\nYou did not enter anything.\nTry again."));
+                    continue;
+                }
             }
 
             try {
@@ -201,6 +208,39 @@ public class ConsoleReader {
             }
         }
         return input;
+    }
+
+    public String nextPassword() {
+        return nextPassword("");
+    }
+
+    public String nextPassword(String label) {
+        return nextPassword(label, getEmpty());
+    }
+
+    public String nextPassword(Consumer<String> validator) {
+        return nextPassword("", validator);
+    }
+
+    public String nextPassword(String label, Consumer<String> validator) {
+        Console console = System.console();
+        if (console == null) {
+            return nextLine(label, validator, true);
+        }
+
+        String password = null;
+        while (password == null) {
+            String tmp = new String(console.readPassword(label));
+
+            try {
+                validator.accept(tmp);
+                password = tmp;
+            } catch (RuntimeException e) {
+                handleFailedValidation(e);
+            }
+        }
+
+        return password;
     }
 
     public boolean nextDecision() {
