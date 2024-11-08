@@ -152,6 +152,39 @@ public class ConsoleReader {
         return nextValid(label, cin::nextDouble, validator, "double");
     }
 
+    public String nextLine() {
+        return nextLine("");
+    }
+
+    public String nextLine(String label) {
+        return nextLine(label, getEmpty());
+    }
+
+    public String nextLine(Consumer<String> validator) {
+        return nextLine("", validator);
+    }
+
+    public String nextLine(String label, Consumer<String> validator) {
+        String input = null;
+        while (input == null) {
+            cout.print(label);
+            String tmp = cin.nextLine().strip();
+
+            if (tmp.isEmpty()) {
+                cout.println(Colors.likeError("\nYou did not enter anything.\nTry again."));
+                continue;
+            }
+
+            try {
+                validator.accept(tmp);
+                input = tmp;
+            } catch (RuntimeException e) {
+                handleFailedValidation(e);
+            }
+        }
+        return input;
+    }
+
     public boolean nextDecision() {
         return nextDecision("");
     }
@@ -202,6 +235,17 @@ public class ConsoleReader {
         return (Consumer<T>) empty;
     }
 
+    private void handleFailedValidation(RuntimeException e) {
+        cout.println();
+        cout.println(Colors.likeError(e.getMessage()));
+
+        boolean tryAgain = nextDecision("Would you like to try again (enter \"yes\" or \"no\"): ");
+        if (!tryAgain) {
+            throw new InputCanceledException();
+        }
+        cout.println();
+    }
+
     private <T> T nextValid(String label, Supplier<T> reader, Consumer<T> validator, String type) {
         T input = null;
 
@@ -210,14 +254,7 @@ public class ConsoleReader {
             try {
                 validator.accept(tmp);
             } catch (RuntimeException e) {
-                cout.println();
-                cout.println(Colors.likeError(e.getMessage()));
-
-                boolean tryAgain = nextDecision("Would you like to try again (enter \"yes\" or \"no\"): ");
-                if (!tryAgain) {
-                    throw new InputCanceledException();
-                }
-                cout.println();
+                handleFailedValidation(e);
                 continue;
             }
             input = tmp;
