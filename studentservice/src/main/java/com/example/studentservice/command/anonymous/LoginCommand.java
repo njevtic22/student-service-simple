@@ -35,7 +35,7 @@ public class LoginCommand implements Command {
 
         while (authenticated == null) {
             String username = console.nextLine("Enter username: ");
-            String password = console.nextLine("Enter password: ");
+            String password = console.nextPassword("Enter password: ");
 
             try {
                 authenticated = (User) service.authenticate(username, password);

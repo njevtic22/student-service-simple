@@ -46,6 +46,6 @@ public class DeleteReferentCommand implements Command {
                 throw new EntityNotFoundException("User with username \"" + inputUsername + "\" is not referent");
             }
         };
-        return console.nextValidLine("Enter referents username: ", validator);
+        return console.nextLine("Enter referents username: ", validator);
     }
 }

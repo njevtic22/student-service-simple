@@ -51,7 +51,7 @@ public class UpdateStudentCommand implements Command {
                 throw new EntityNotFoundException("Student", "index", inputIndex);
             }
         };
-        return console.nextValidLine("Enter students index: ", validator);
+        return console.nextLine("Enter students index: ", validator);
     }
 
     private Student readChanges(String existingIndex) {
@@ -64,21 +64,21 @@ public class UpdateStudentCommand implements Command {
                 service.validateIndex(newIndex);
             }
         };
-        String index = console.nextValidLine("Enter students new index: ", indexValidator);
+        String index = console.nextLine("Enter students new index: ", indexValidator);
 
         Consumer<String> emailValidator = newEmail -> {
             if (!existing.getEmail().equals(newEmail)) {
                 service.validateEmail(newEmail);
             }
         };
-        String email = console.nextValidLine("Enter students new email: ", emailValidator);
+        String email = console.nextLine("Enter students new email: ", emailValidator);
 
         Consumer<String> phoneValidator = phone -> {
             if (!phone.chars().allMatch(Character::isDigit)) {
                 throw new IllegalArgumentException("Phone number must contain only digits");
             }
         };
-        String phone = console.nextValidLine("Enter students new phone number: ", phoneValidator);
+        String phone = console.nextLine("Enter students new phone number: ", phoneValidator);
 
         String name = console.nextLine("Enter students new name: ");
         String surname = console.nextLine("Enter students new surname: ");

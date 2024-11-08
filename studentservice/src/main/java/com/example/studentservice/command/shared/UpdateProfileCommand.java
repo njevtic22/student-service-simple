@@ -57,7 +57,7 @@ public class UpdateProfileCommand implements Command {
                 service.validateUsername(changedUsername);
             }
         };
-        String username = console.nextValidLine("Enter username: ", validator);
+        String username = console.nextLine("Enter username: ", validator);
 
         return new User(
                 name,

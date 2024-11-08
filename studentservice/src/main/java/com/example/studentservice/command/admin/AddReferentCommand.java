@@ -42,8 +42,8 @@ public class AddReferentCommand implements Command {
         System.out.println("Adding referent");
         String name = console.nextLine("Enter name: ");
         String surname = console.nextLine("Enter surname: ");
-        String username = console.nextValidLine("Enter username: ", service::validateUsername);
-        String password = console.nextValidLine("Enter password: ", service::validatePassword);
+        String username = console.nextLine("Enter username: ", service::validateUsername);
+        String password = console.nextPassword("Enter password: ", service::validatePassword);
 
         return new User(
                 name,
