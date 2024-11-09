@@ -3,6 +3,7 @@ package com.example.studentservice.service;
 import com.example.studentservice.core.error.EntityNotFoundException;
 import com.example.studentservice.core.error.UniquePropertyException;
 import com.example.studentservice.model.Student;
+import com.example.studentservice.model.YearOfStudies;
 import com.example.studentservice.repository.StudentRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -18,8 +19,18 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public Student add(Student newT) {
-        return null;
+    public Student add(Student newStudent) {
+        Student toAdd = new Student(
+                newStudent.getName(),
+                newStudent.getSurname(),
+                newStudent.getIndex(),
+                newStudent.getBirthDate(),
+                newStudent.getAddress(),
+                newStudent.getPhone(),
+                newStudent.getEmail(),
+                YearOfStudies.FIRST
+        );
+        return repository.save(toAdd);
     }
 
     @Override
@@ -81,6 +92,13 @@ public class StudentServiceImpl implements StudentService {
 
         if (repository.existsByEmail(email)) {
             throw new UniquePropertyException("Student", "email", email);
+        }
+    }
+
+    @Override
+    public void validatePhone(String phone) {
+        if (!phone.chars().allMatch(Character::isDigit)) {
+            throw new IllegalArgumentException("Phone number must contain only digits");
         }
     }
 }

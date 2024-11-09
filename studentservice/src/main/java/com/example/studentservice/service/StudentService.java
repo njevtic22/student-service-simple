@@ -10,4 +10,6 @@ public interface StudentService extends CrudService<Student> {
     void validateIndex(String index);
 
     void validateEmail(String email);
+
+    void validatePhone(String phone);
 }
