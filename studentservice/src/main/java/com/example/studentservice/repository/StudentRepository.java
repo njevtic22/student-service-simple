@@ -11,4 +11,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     boolean existsByIndex(String index);
 
     boolean existsByEmail(String email);
+
+    int deleteByIndex(String index);
 }

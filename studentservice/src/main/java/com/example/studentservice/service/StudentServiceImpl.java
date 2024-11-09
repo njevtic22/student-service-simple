@@ -1,10 +1,12 @@
 package com.example.studentservice.service;
 
 import com.example.studentservice.core.error.EntityNotFoundException;
+import com.example.studentservice.core.error.MultipleDeletedRowsException;
 import com.example.studentservice.core.error.UniquePropertyException;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.model.YearOfStudies;
 import com.example.studentservice.repository.StudentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -62,8 +64,16 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void delete(String identification) {
+    @Transactional
+    public void delete(String index) {
+        if (!repository.existsByIndex(index)) {
+            throw new EntityNotFoundException("Student", "index", index);
+        }
 
+        int rowsAffected = repository.deleteByIndex(index);
+        if (rowsAffected != 1) {
+            throw new MultipleDeletedRowsException("students", "index");
+        }
     }
 
     @Override
