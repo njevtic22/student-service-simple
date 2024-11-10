@@ -83,6 +83,32 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public void advanceStudent(String index) {
+        Student found = getByIndex(index);
+        YearOfStudies year = found.getYearOfStudies();
+
+        YearOfStudies nextYear = null;
+        try {
+            nextYear = year.getNextYear();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Chosen student has finished studies and therefore can't advance further");
+        }
+
+        Student changed = new Student(
+                found.getId(),
+                found.getName(),
+                found.getSurname(),
+                found.getIndex(),
+                found.getBirthDate(),
+                found.getAddress(),
+                found.getPhone(),
+                found.getEmail(),
+                nextYear
+        );
+        repository.save(changed);
+    }
+
+    @Override
     public boolean existsByIndex(String index) {
         return repository.existsByIndex(index);
     }

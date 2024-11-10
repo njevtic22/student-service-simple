@@ -5,5 +5,15 @@ public enum YearOfStudies {
     SECOND,
     THIRD,
     FOURTH,
-    FINISHED
+    FINISHED;
+
+    public YearOfStudies getNextYear() {
+        return switch (this) {
+            case FIRST -> SECOND;
+            case SECOND -> THIRD;
+            case THIRD -> FOURTH;
+            case FOURTH -> FINISHED;
+            case FINISHED -> throw new IllegalArgumentException("There is no next year after finished studies");
+        };
+    }
 }
