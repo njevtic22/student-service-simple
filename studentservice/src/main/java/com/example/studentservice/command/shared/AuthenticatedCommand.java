@@ -2,6 +2,7 @@ package com.example.studentservice.command.shared;
 
 import com.example.studentservice.command.Command;
 import com.example.studentservice.command.CommandGroup;
+import com.example.studentservice.command.StudentCommands;
 import com.example.studentservice.menu.Menu;
 import com.example.studentservice.model.Role;
 import com.example.studentservice.model.User;
@@ -17,7 +18,11 @@ import java.util.List;
 public class AuthenticatedCommand implements Command {
     private final AuthenticationService service;
     private final List<Command> adminCommands;
-    private final List<Command> referentCommands;
+
+    // use either List or StudentCommands
+    private List<Command> referentCommands;
+    private final StudentCommands studentCommands;
+
     private final List<Command> sharedCommands;
     private final ConsoleReader console;
     private final Menu menu;
@@ -25,14 +30,16 @@ public class AuthenticatedCommand implements Command {
     public AuthenticatedCommand(
             AuthenticationService service,
             @CommandGroup("admin-menu") List<Command> adminCommands,
-            @CommandGroup("referent-menu") List<Command> referentCommands,
+//            @CommandGroup("referent-menu") List<Command> referentCommands,
+            StudentCommands studentCommands,
             @CommandGroup("user-shared") List<Command> sharedCommands,
             ConsoleReader console,
             Menu menu
     ) {
         this.service = service;
         this.adminCommands = adminCommands;
-        this.referentCommands = referentCommands;
+//        this.referentCommands = referentCommands;
+        this.studentCommands = studentCommands;
         this.sharedCommands = sharedCommands;
         this.console = console;
         this.menu = menu;
@@ -41,6 +48,8 @@ public class AuthenticatedCommand implements Command {
     @PostConstruct
     public void init() {
         adminCommands.addAll(sharedCommands);
+
+        referentCommands = studentCommands.get();
         referentCommands.addAll(sharedCommands);
     }
 
