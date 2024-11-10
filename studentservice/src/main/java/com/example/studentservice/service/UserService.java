@@ -14,5 +14,7 @@ public interface UserService extends CrudService<User> {
 
     void validatePassword(String password);
 
-    void changePassword(/* Long userId,*/ String oldPassword, String newPassword, String repeatedPassword);
+    void validatePasswordMatch(String userEncodedPassword, String oldPassword, String newPassword, String repeatedPassword);
+
+    void changePassword(String username, String newPassword);
 }

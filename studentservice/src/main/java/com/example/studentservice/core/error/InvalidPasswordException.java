@@ -10,6 +10,11 @@ public class InvalidPasswordException extends RuntimeException {
         this.messages = messages;
     }
 
+    public InvalidPasswordException(String message) {
+        super("Invalid password");
+        this.messages = List.of(message);
+    }
+
     @Override
     public String getMessage() {
         return String.join("\n", messages);

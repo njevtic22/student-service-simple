@@ -105,8 +105,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(String oldPassword, String newPassword, String repeatedPassword) {
+    @Transactional
+    public void changePassword(String username, String newPassword) {
 
+        int rowsAffected = repository.updatePasswordByUsername(username, encoder.encode(newPassword));
+        if (rowsAffected != 1) {
+            throw new RuntimeException("Zero or more than one rows in users table is affected by updatePasswordById operation.");
+        }
     }
     @Override
     public void validateUsername(String username) {
@@ -131,7 +136,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void validatePasswordMatch(User existingUser, String oldPassword, String newPassword, String repeatedPassword) {
+    @Override
+    public void validatePasswordMatch(String userEncodedPassword, String oldPassword, String newPassword, String repeatedPassword) {
+        if (!encoder.matches(oldPassword, userEncodedPassword)) {
+            throw new InvalidPasswordException("Incorrect password.");
+        }
 
+        if (!newPassword.equals(repeatedPassword)) {
+            throw new InvalidPasswordException("New password and repeated password do not match.");
+        }
     }
 }
