@@ -170,6 +170,7 @@ public class ConsoleReader {
         return nextValid(label, cin::nextBoolean, validator, "boolean");
     }
 
+    // TODO: add boolean blankAllowed without validator
     public String nextLine() {
         return nextLine("");
     }

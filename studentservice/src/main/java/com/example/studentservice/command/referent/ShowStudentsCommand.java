@@ -5,6 +5,7 @@ import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.model.Address;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.service.StudentService;
+import com.example.studentservice.util.ConsoleReader;
 import com.example.studentservice.util.DateTimeUtil;
 import com.example.studentservice.util.PagingUtil;
 import com.example.studentservice.util.Pair;
@@ -15,18 +16,21 @@ import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Order(1)
 @CommandGroup("referent-menu")
 public class ShowStudentsCommand implements Command {
     private final StudentService service;
+    private final ConsoleReader console;
     private final PagingUtil pagingUtil;
     private final TablePrinter table;
     private final DateTimeUtil dateTime;
 
-    public ShowStudentsCommand(StudentService service, PagingUtil pagingUtil, TablePrinter table, DateTimeUtil dateTime) {
+    public ShowStudentsCommand(StudentService service, ConsoleReader console, PagingUtil pagingUtil, TablePrinter table, DateTimeUtil dateTime) {
         this.service = service;
+        this.console = console;
         this.pagingUtil = pagingUtil;
         this.table = table;
         this.dateTime = dateTime;
@@ -51,7 +55,11 @@ public class ShowStudentsCommand implements Command {
         );
 
         Pageable pageable = pagingUtil.getRequest(sortOptions);
-        List<Student> students = service.getAll(pageable).getContent();
+
+        String filterName = console.nextLine("\nEnter name to filter: ", line -> {}, true);
+        Map<String, String> filter = Map.of("name", filterName);
+
+        List<Student> students = service.getAll(filter, pageable).getContent();
 
         table.addLine();
         table.addRow("Row", "Name", "Surname", "Index", "Birth date", "Address", "Phone", "Email", "Year of studies");

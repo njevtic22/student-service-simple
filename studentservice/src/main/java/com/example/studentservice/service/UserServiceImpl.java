@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -49,6 +50,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Slice<User> getAll(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    @Override
+    public Slice<User> getAll(Map<String, String> filter, Pageable pageable) {
+        return getAll(pageable);
     }
 
     @Override
