@@ -18,7 +18,6 @@ import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 // Alternative to Command classes
@@ -56,11 +55,8 @@ public class StudentCommands {
         );
 
         Pageable pageable = pagingUtil.getRequest(sortOptions);
-
-        String filterName = console.nextLine("\nEnter name to filter: ", line -> {}, true);
-        Map<String, String> filter = Map.of("name", filterName);
-
-        List<Student> students = service.getAll(filter, pageable).getContent();
+        String keyword = console.nextLine("\nEnter filter keyword: ", line -> {}, true);
+        List<Student> students = service.getAll(keyword, pageable).getContent();
 
         table.addLine();
         table.addRow("Row", "Name", "Surname", "Index", "Birth date", "Address", "Phone", "Email", "Year of studies");

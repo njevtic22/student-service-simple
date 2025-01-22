@@ -6,23 +6,19 @@ import com.example.studentservice.core.error.UniquePropertyException;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.model.YearOfStudies;
 import com.example.studentservice.repository.StudentRepository;
-import com.example.studentservice.repository.criteria.StudentSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import static com.example.studentservice.repository.specification.StudentSpecification.getSpec;
 
 @Service
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository repository;
-    private final StudentSpecification spec;
 
-    public StudentServiceImpl(StudentRepository repository, StudentSpecification spec) {
+    public StudentServiceImpl(StudentRepository repository) {
         this.repository = repository;
-        this.spec = spec;
     }
 
 
@@ -47,9 +43,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Slice<Student> getAll(Map<String, String> filter, Pageable pageable) {
-        Specification<Student> filterSpec = spec.getSpec(filter);
-        return repository.findAll(filterSpec, pageable);
+    public Slice<Student> getAll(String keyword, Pageable pageable) {
+        return repository.findAll(getSpec(keyword), pageable);
     }
 
     @Override
