@@ -8,9 +8,11 @@ public interface CrudService<T> {
 
     Slice<T> getAll(Pageable pageable);
 
+    Slice<T> getAll(String keyword, Pageable pageable);
+
     T getById(Long id);
 
-    T update(Long id, T changes);
+    T update(String identification, T changes);
 
-    void delete(Long id);
+    void delete(String identification);
 }

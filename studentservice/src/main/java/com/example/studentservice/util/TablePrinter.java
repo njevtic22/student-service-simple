@@ -48,10 +48,14 @@ public class TablePrinter {
     }
 
     public void print(PrintWriter out) {
+        print(out, 0);
+    }
+
+    public void print(PrintWriter out, int additionalWidth) {
         StringBuilder builder = new StringBuilder(widths.length * 5);
         builder.append("+");
         for (int width : widths) {
-            builder.append("-".repeat(width)).append("+");
+            builder.append("-".repeat(width + additionalWidth)).append("+");
 //             builder.append(new String(new char[width]).replace("\0", "-"));
         }
         String line = builder.toString();
@@ -65,7 +69,7 @@ public class TablePrinter {
             String[] row = rows.get(i);
             for (int j = 0; j < row.length; j++) {
                 out.print("|");
-                out.print(center(row[j], widths[j]));
+                out.print(center(row[j], widths[j] + additionalWidth));
             }
             out.println("|");
         }
@@ -73,6 +77,8 @@ public class TablePrinter {
         if (lineIndexes.contains(i)) {
             out.println(line);
         }
+
+        out.flush();
     }
 
     private String center(String str, int width) {

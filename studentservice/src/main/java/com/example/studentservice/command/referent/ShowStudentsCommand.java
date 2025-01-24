@@ -5,6 +5,8 @@ import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.model.Address;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.service.StudentService;
+import com.example.studentservice.util.ConsoleReader;
+import com.example.studentservice.util.DateTimeUtil;
 import com.example.studentservice.util.PagingUtil;
 import com.example.studentservice.util.Pair;
 import com.example.studentservice.util.TablePrinter;
@@ -20,13 +22,17 @@ import java.util.List;
 @CommandGroup("referent-menu")
 public class ShowStudentsCommand implements Command {
     private final StudentService service;
+    private final ConsoleReader console;
     private final PagingUtil pagingUtil;
     private final TablePrinter table;
+    private final DateTimeUtil dateTime;
 
-    public ShowStudentsCommand(StudentService service, PagingUtil pagingUtil, TablePrinter table) {
+    public ShowStudentsCommand(StudentService service, ConsoleReader console, PagingUtil pagingUtil, TablePrinter table, DateTimeUtil dateTime) {
         this.service = service;
+        this.console = console;
         this.pagingUtil = pagingUtil;
         this.table = table;
+        this.dateTime = dateTime;
     }
 
     @Override
@@ -36,6 +42,7 @@ public class ShowStudentsCommand implements Command {
         // getRequest secures same field does not appear multiple times
 
         List<Pair<String, String>> sortOptions = List.of(
+                new Pair<>("Unsorted", "id,asc"),
                 new Pair<>("Name ascending", "name,asc"),
                 new Pair<>("Name descending", "name,desc"),
                 new Pair<>("Surname ascending", "surname,asc"),
@@ -47,7 +54,8 @@ public class ShowStudentsCommand implements Command {
         );
 
         Pageable pageable = pagingUtil.getRequest(sortOptions);
-        List<Student> students = service.getAll(pageable).getContent();
+        String keyword = console.nextLine("\nEnter filter keyword: ", line -> {}, true);
+        List<Student> students = service.getAll(keyword, pageable).getContent();
 
         table.addLine();
         table.addRow("Row", "Name", "Surname", "Index", "Birth date", "Address", "Phone", "Email", "Year of studies");
@@ -61,7 +69,7 @@ public class ShowStudentsCommand implements Command {
                     student.getName(),
                     student.getSurname(),
                     student.getIndex(),
-                    student.getBirthDate().toString(),
+                    dateTime.format(student.getBirthDate(), DateTimeUtil.RS_DATE),
                     address.getCity() + ", " + address.getStreet() + " " + address.getNumber(),
                     student.getPhone(),
                     student.getEmail(),
@@ -72,8 +80,7 @@ public class ShowStudentsCommand implements Command {
 
         PrintWriter out = new PrintWriter(System.out);
         table.print(out);
-        // not close() so it could be still printed to console
-        out.flush();
+        // not out.close() so it could be still printed to console
         table.clear();
     }
 

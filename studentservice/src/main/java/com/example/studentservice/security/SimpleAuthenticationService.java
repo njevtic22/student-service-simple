@@ -1,53 +1,84 @@
 package com.example.studentservice.security;
 
-import com.example.studentservice.core.error.BadCredentialsException;
-import com.example.studentservice.core.error.EntityNotFoundException;
 import com.example.studentservice.model.User;
-import com.example.studentservice.service.UserService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SimpleAuthenticationService implements AuthenticationService {
-    private final UserService service;
-    private final PasswordEncoder encoder;
-    private User authenticated;
+    private final AuthenticationManager authManager;
 
-    public SimpleAuthenticationService(UserService service, PasswordEncoder encoder) {
-        this.service = service;
-        this.encoder = encoder;
+    public SimpleAuthenticationService(AuthenticationManager authManager) {
+        this.authManager = authManager;
     }
+
 
     @Override
-    public User authenticate(String username, String password) {
-        User tmp = getByUsername(username);
-        validatePassword(password, tmp.getPassword());
-
-        authenticated = tmp;
-        return authenticated;
+    public UserDetails authenticate(String username, String password) {
+        Authentication userAuth = authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        SecurityContextHolder.getContext().setAuthentication(userAuth);
+        return getPrincipal(userAuth);
     }
+
+//    To read about authenticate
+//    https://stackoverflow.com/questions/29434209/change-username-in-spring-security-when-logged-in
+//    https://stackoverflow.com/questions/14010326/how-to-change-the-login-name-for-the-current-user-with-spring-security-3-1/14174404#14174404
+//    search: spring security change security context after username change
+//
+//    Possible problem with chosen solution 1: (reauthenticate(String changedUsername))
+//    previousAuth is not retrieved from database, but from SecurityContext and therefore its data
+//    can be outdated after profile update, but if username, password and authorities are up to date
+//    does it really matter? (Spring security uses UserDetails and not User directly)
+//
+//    That could be another reason why model.User class should not implement UserDetails interface
+//    because it could contain significantly more data than needed for Spring security
+//
+//    Solution 2 (reauthenticate(String changedUsername))
+//    userService.getByUsername(...) can be used instead of copying previousAuth
+//    but it requires another query to database and all of that just to keep
+//    all User data up to date even though Spring security uses just UserDetails
+//
+//    Should UserDetails object be changed (reauthentication) in SecurityContext after changing password?
+
+//        Solution 3
+    @Override
+    public UserDetails reauthenticate(User changes) {
+        User previousAuth = (User) getAuthenticated();
+
+        User currentAuth = new User(
+                previousAuth.getId(),
+                changes.getName(),
+                changes.getSurname(),
+                changes.getUsername(),
+                previousAuth.getPassword(),
+                previousAuth.getRole()
+        );
+
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(currentAuth, currentAuth.getPassword(), currentAuth.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return currentAuth;
+    }
+
 
     @Override
     public void invalidateAuthentication() {
-        authenticated = null;
+        SecurityContextHolder.clearContext();
     }
 
     @Override
-    public User getAuthenticated() {
-        return authenticated;
+    public UserDetails getAuthenticated() {
+        Authentication userAuth = SecurityContextHolder.getContext().getAuthentication();
+        return getPrincipal(userAuth);
     }
 
-    private void validatePassword(String rawPassword, String encodedPassword) {
-        if (!encoder.matches(rawPassword, encodedPassword)) {
-            throw new BadCredentialsException("Invalid password");
-        }
-    }
-
-    private User getByUsername(String username) {
-        try {
-            return service.getByUsername(username);
-        } catch (EntityNotFoundException e) {
-            throw new BadCredentialsException("Invalid username");
-        }
+    private UserDetails getPrincipal(Authentication authentication) {
+        return (UserDetails) authentication.getPrincipal();
+//        return userService.getByUsername(principal.getUsername());
     }
 }

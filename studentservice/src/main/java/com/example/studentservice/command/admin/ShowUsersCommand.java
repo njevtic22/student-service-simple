@@ -4,6 +4,7 @@ import com.example.studentservice.command.Command;
 import com.example.studentservice.command.CommandGroup;
 import com.example.studentservice.model.User;
 import com.example.studentservice.service.UserService;
+import com.example.studentservice.util.ConsoleReader;
 import com.example.studentservice.util.PagingUtil;
 import com.example.studentservice.util.Pair;
 import com.example.studentservice.util.TablePrinter;
@@ -15,15 +16,17 @@ import java.io.PrintWriter;
 import java.util.List;
 
 @Component
-@Order(2)
+@Order(1)
 @CommandGroup("admin-menu")
 public class ShowUsersCommand implements Command {
     private final UserService service;
+    private final ConsoleReader console;
     private final PagingUtil pagingUtil;
     private final TablePrinter table;
 
-    public ShowUsersCommand(UserService service, PagingUtil pagingUtil, TablePrinter table) {
+    public ShowUsersCommand(UserService service, ConsoleReader console, PagingUtil pagingUtil, TablePrinter table) {
         this.service = service;
+        this.console = console;
         this.pagingUtil = pagingUtil;
         this.table = table;
     }
@@ -32,6 +35,7 @@ public class ShowUsersCommand implements Command {
     @Override
     public void execute() {
         List<Pair<String, String>> sortOptions = List.of(
+                new Pair<>("Unsorted", "id,asc"),
                 new Pair<>("Name ascending", "name,asc"),
                 new Pair<>("Name descending", "name,desc"),
                 new Pair<>("Surname ascending", "surname,asc"),
@@ -41,7 +45,8 @@ public class ShowUsersCommand implements Command {
         );
 
         Pageable pageable = pagingUtil.getRequest(sortOptions);
-        List<User> users = service.getAll(pageable).getContent();
+        String keyword = console.nextLine("\nEnter filter keyword: ", line -> {}, true);
+        List<User> users = service.getAll(keyword, pageable).getContent();
 
         table.addLine();
         table.addRow("Row", "Name", "Surname", "Username", "Role");
@@ -55,8 +60,7 @@ public class ShowUsersCommand implements Command {
 
         PrintWriter out = new PrintWriter(System.out);
         table.print(out);
-        // not close() so it could be still printed to console
-        out.flush();
+        // not out.close() so it could be still printed to console
         table.clear();
     }
 

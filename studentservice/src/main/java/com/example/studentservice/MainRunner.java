@@ -33,7 +33,7 @@ public class MainRunner implements ApplicationRunner {
             int input = console.nextInt("Enter number of desired command: ");
             System.out.println();
             if (input > 0 && input <= commands.size()) {
-                executeCommand(commands.get(input - 1));
+                commands.get(input - 1).execute();
             } else if (input == 0) {
                 System.out.println(Colors.likeWarning("Shutdown"));
                 console.close();
@@ -42,15 +42,6 @@ public class MainRunner implements ApplicationRunner {
                 System.out.println(Colors.likeError("Invalid option"));
             }
             System.out.println();
-        }
-    }
-
-    private void executeCommand(Command command) {
-        try {
-            command.execute();
-        } catch (RuntimeException e) {
-            System.out.println();
-            System.out.println(Colors.likeError(e.getMessage()));
         }
     }
 }
