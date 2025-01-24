@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.studentservice.repository.specification.UserSpecification.getSpec;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Slice<User> getAll(String keyword, Pageable pageable) {
-        return getAll(pageable);
+        return repository.findAll(getSpec(keyword), pageable);
     }
 
     @Override
