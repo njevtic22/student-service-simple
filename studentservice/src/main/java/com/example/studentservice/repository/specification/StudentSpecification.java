@@ -25,6 +25,15 @@ public class StudentSpecification {
                 .map(spec -> spec.or(emailLike(keyword)))
                 .map(spec -> spec.or(studiesLike(keyword)))
                 .orElse(null);
+
+        // does the same thing as the example above
+//        return Specification.where(nameLike(keyword))
+//                .or(surnameLike(keyword))
+//                .or(indexLike(keyword))
+//                .or(addressLike(keyword))
+//                .or(phoneLike(keyword))
+//                .or(emailLike(keyword))
+//                .or(studiesLike(keyword));
     }
 
     public static Specification<Student> getSpec(Map<String, String> filter) {
